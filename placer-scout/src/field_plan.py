@@ -7,12 +7,14 @@ from shapely.ops import nearest_points, transform
 sys.path.insert(0, os.path.dirname(__file__)); import score
 ROOT = os.path.join(os.path.dirname(__file__), ".."); DATA = os.path.join(ROOT, "data"); OUT = os.path.join(ROOT, "out", "field"); os.makedirs(OUT, exist_ok=True)
 U = 26911
-t = pd.read_csv(os.path.join(ROOT, "out", "targets.csv"))
+TOP_N = 8                 # owner: focus the field plan on the strong tier (scores >= ~0.15)
+INCLUDE_CLIPS = False     # ant-mound scan stopped: 0 of 50 clips confirmed (stop rule: fewer than 5)
+t = pd.read_csv(os.path.join(ROOT, "out", "targets.csv")); t = t[t["rank"] <= TOP_N]
 clips = pd.DataFrame(json.load(open(os.path.join(ROOT, "out", "review", "clips.json"))))
 stops = [dict(kind="target", key=f"T{r['rank']}", rank=int(r["rank"]), name=f"Target #{r['rank']}", district=r.district, lat=r.lat, lon=r.lon,
               score=r.score, trap=r.trap_type, land=r.land_status, boundary=r.boundary_risk if isinstance(r.boundary_risk, str) else "",
               near_excl=r.nearest_exclusion, near_excl_m=r.nearest_exclusion_m, src=r.top_source_name, src_m=r.top_source_dist_m, window=r.window) for _, r in t.iterrows()]
-stops.append(dict(kind="clips", key="CLIPS", rank=0, name="Ant mound clip area (50 spots)", district="Eldorado Canyon/Nelson",
+if INCLUDE_CLIPS: stops.append(dict(kind="clips", key="CLIPS", rank=0, name="Ant mound clip area (50 spots)", district="Eldorado Canyon/Nelson",
                   lat=float(clips.lat.mean()), lon=float(clips.lon.mean()), window="east"))
 roads = gpd.read_file(os.path.join(DATA, "roads.geojson"))
 roads = roads[~roads.MTFCC.isin(["S1740", "S1730", "S1710", "S1820", "S1830"])].to_crs(U)        # drop private roads, alleys, walkways, paths

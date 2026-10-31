@@ -10,7 +10,7 @@ pin = lambda la, lo: "https://www.google.com/maps/search/?api=1&" + urllib.parse
 ll = lambda la, lo: f"{la:.5f}, {lo:.5f}"
 
 TRIPS = {
- "A · Nelson / Eldorado": ("Start here. Closest to Las Vegas, all stops are short walks, and it settles the ant-mound question while checking the #1 target.",
+ "A · Nelson / Eldorado": ("Closest to Las Vegas, and it holds the #1 target.",
    "From Henderson, take US-95 south toward Searchlight, then turn east on NV-165 (Nelson Road) toward Nelson. The stops sit along NV-165 and the dirt roads north and south of it, before the road drops into Eldorado Canyon. Lower Eldorado Canyon and the river are Lake Mead NRA: no drones there."),
  "B · Searchlight": ("Mostly short walks. Several sit right against private land and old shafts, so read each card's warnings.",
    "Take US-95 south from Henderson to Searchlight. The targets are on the edge of town and along Cottonwood Cove Road east of US-95. Avi Kwa Ame National Monument surrounds this area: stay on the targets listed, which are outside it."),
@@ -123,13 +123,18 @@ a{color:var(--accent)}
 </style>
 <div class="wrap">
 <header><h1>Placer Scout field plan</h1>
-<p class="lede">Driving, drone and walking plan for the 25 wash targets and the 50 ant-mound clip spots. Each stop has a launch point on a public road, a drone shot list with exact start and stop points, what to check on foot, and warnings for private land, claims and old shafts.</p></header>
+<p class="lede">Driving, drone and walking plan for the top __NT__ wash targets: the strong tier, each below a recorded gold mine, mill or mine dump. Each stop has a launch point on a public road, a drone shot list with exact start and stop points, what to check on foot, and warnings for private land, claims and old shafts.</p></header>
 
 <section class="box"><h2>Where to start</h2>
-<ol><li><b>Trip A (Nelson) first.</b> It is the closest, the walks are short, and it answers the two biggest open questions in one morning: are the ant "clearings" real, and is the #1 target a real gold trap?</li>
-<li><b>Trip B (Searchlight) next.</b> __NB__ targets, mostly close to the road. Several sit tight against private land and old shafts, so watch the red and amber warnings.</li>
-<li><b>Trip C (Goodsprings) last.</b> Longer, rougher walks. __HARD_C__</li></ol>
-<p class="small">Bring the files from the chat: <b>field_plan.kml</b> (launch points, targets and wash flight lines for Google Earth or a GPS app), <b>clip_spots.gpx</b> and <b>targets.gpx</b>.</p></section>
+<ol>__START__</ol>
+<p class="small">The ant-mound check is off the list: in the clip review none of the 50 spots looked like a real clearing, so the photo scan stopped there. Bring the files from the chat: <b>field_plan.kml</b> (launch points, targets and wash flight lines for Google Earth or a GPS app) and <b>targets.gpx</b>.</p></section>
+
+<section class="box"><h2>After this week's rain</h2><ul>
+<li><b>Wait 2–3 dry days</b> after heavy rain before going into any wash. Beds stay soft, banks undercut and collapse, and dirt roads wash out or turn to mud.</li>
+<li><b>Check the forecast the morning you go.</b> Look at the NWS Las Vegas forecast and any flash flood watch. Rain miles upstream can send a flood down a dry wash under clear sky.</li>
+<li><b>Never drive into water</b> across a road or wash dip. Turn around.</li>
+<li><b>Why it's worth the wait:</b> fresh floods wash sand off the gravel bars and can leave bedrock bare. Look at the upstream ends of bars, the inside of bends below junctions, and cracks in newly exposed bedrock.</li>
+<li><b>Fly after it dries:</b> the drone video right after a flood season is the best before-and-after record you'll get. Note the date of the storm you're following.</li></ul></section>
 
 <section class="box"><h2>Data that raises confidence</h2>
 <p>Record these at every stop. They let me check the model against what's really on the ground and re-weight it.</p>
@@ -141,7 +146,7 @@ a{color:var(--accent)}
 <div><b>Gravel</b><br>Mostly sand, pea gravel, cobbles or boulders.</div>
 <div><b>Pans</b><br>Gold colors in each of 3 pans, plus black sand: none, some or lots.</div>
 <div><b>Flood signs</b><br>Debris line height, fresh scour, uprooted brush.</div>
-<div><b>Ant nests</b><br>Clip number or waypoint, disc size, ants active or not.</div>
+<div><b>Fresh flood signs</b><br>New sand sheets, scoured bedrock, debris height from this week's storms.</div>
 <div><b>Access</b><br>Road condition, gates, signs, claim posts you saw.</div></div>
 <p class="small">Zero colors is a useful result too: it tells me which signals to trust less.</p></section>
 
@@ -157,7 +162,12 @@ __TRIPS__
 <p class="small">Launch points are the nearest public road to each target, chosen off Park Service land, private land and wilderness. Walks and climbs come from 10 m elevation data, and wash lines from the 10 m flow model, so expect small offsets on the ground. Land status comes from BLM maps; check the claim link in targets.csv before you go.</p>
 </div>"""
 nb = sum(1 for r in R if r["trip"].startswith("B") and r["kind"] == "target")
+START_WHY = {"A": "the #1 target, closest to Las Vegas.", "B": "short walks, but tight against private land and old shafts; read the warnings.",
+             "C": "longer, rougher walks; go early with plenty of water.", "D": "one target at the south edge of the valley."}
+order_trips = sorted({r["trip"] for r in R}, key=lambda tr: min(r["rank"] for r in R if r["trip"] == tr))
+start = "".join(f"<li><b>Trip {E(tr)}</b> ({sum(1 for r in R if r['trip'] == tr)} target{'s' if sum(1 for r in R if r['trip'] == tr) > 1 else ''}, "
+                f"best is #{min(r['rank'] for r in R if r['trip'] == tr)}): {E(START_WHY.get(tr[0], ''))}</li>" for tr in order_trips)
 hc = [r["name"] for r in R if r["trip"].startswith("C") and (r["walk_m"] >= 1500 or r["climb_m"] >= 150)]
 hard_c = ("Skip " + " and ".join(hc) + " unless you're set up for a real hike.") if hc else "No long hikes on this trip."
-open(os.path.join(OUT, "field_plan.html"), "w").write(page.replace("__TRIPS__", "".join(trips)).replace("__NB__", {7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}.get(nb, str(nb))).replace("__HARD_C__", hard_c))
+open(os.path.join(OUT, "field_plan.html"), "w").write(page.replace("__TRIPS__", "".join(trips)).replace("__NB__", {7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}.get(nb, str(nb))).replace("__HARD_C__", hard_c).replace("__START__", start).replace("__NT__", str(len(R))))
 print("field_plan.html KB", os.path.getsize(os.path.join(OUT, "field_plan.html")) // 1024)

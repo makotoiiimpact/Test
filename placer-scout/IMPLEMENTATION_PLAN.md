@@ -141,8 +141,9 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
 - [x] B1 NAIP resolution check (2022, 0.6 m)
 - [x] B3–B4 detector on one test area (Nelson, below Rand/Quaker City, BLM only); 50 clips; review page published
       (private artifact with saved answers). **Waiting for owner review.**
-- [ ] B5 tune with labels → full scan (only if ≥5 of 50 are real mounds)
-- [ ] B6 `out/ant_mounds.csv` + map layer
+- [!] B5 **STOPPED by the stop rule**: owner review (2026-10-31) = 0 yes, 24 no, 26 not sure out of 50 (`out/review/labels.json`).
+      The 0.6 m NAIP scan is not finding mounds; no tuning, no full scan. A drone survey (~1–2 cm/px) could revisit the question.
+- [!] B6 not built (no mounds to list)
 - [ ] C REPORT Phase 2 section + verifier
 
 ---
@@ -158,3 +159,6 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
 - [x] Result: 4,124 gated wash cells (1,106 legal) vs ~32,000 before; 15 of 25 targets replaced; 15 lidar rejections in 4 rounds.
 - [x] Trails: BLM GTLF routes + USGS National Map trails added. No legal scored wash is within 300 m of a mapped hiking trail
       (closest 4.2 km); 141 are within 300 m of BLM-managed (mostly "limited motorized") routes → `out/blm_route_washes.csv`.
+
+## Field plan v3 (2026-10-31)
+- [x] Field plan narrowed to the top 8 targets (strong tier); ant-mound clip stops removed; after-rain safety section added.
