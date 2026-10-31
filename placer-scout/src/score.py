@@ -53,21 +53,29 @@ def trace(C, start, direction, max_m):
         idx[ok] = n[ok]; act = ok & (dist < max_m)
     return idx, dist
 
+CORE_GATE_M = 2000     # a recorded gold mine/mill/tailings must lie within this distance upstream along the flow path
+PIT_CAP = 0.5          # topo-map shafts/adits/pits together can add at most half a producing mine's worth of influence
+
+def is_core(src):
+    """recorded gold evidence: MRDS gold records (incl. mills/plants) and USMIN tailings/mine dumps"""
+    return (src.src_dataset == "MRDS") | (src.kind == "tailings/dump") | (src.kind == "mill/plant")
+
 def source_influence(C, src):
     H, W, tr = C["H"], C["W"], C["tr"]
     col = ((src.geometry.x - tr.c) / tr.a).astype(int).values; row = ((src.geometry.y - tr.f) / tr.e).astype(int).values
     m = (row >= 0) & (row < H) & (col >= 0) & (col < W)
     idx = (row[m].astype(np.int64) * W + col[m]); wts = src.weight.values[m].astype(np.float32); sid = np.flatnonzero(m)
     infl = np.zeros(H * W, np.float32); best = np.zeros(H * W, np.float32); bsrc = np.full(H * W, -1, np.int32); bdist = np.zeros(H * W, np.float32)
+    dmin = np.full(H * W, np.inf, np.float32)
     dist = np.zeros(len(idx), np.float32); act = np.ones(len(idx), bool)
     for _ in range(int(MAX_TRACE / min(C["dx"], C["dy"])) + 2):
         c = wts * np.exp(-dist / L_DECAY)
-        np.add.at(infl, idx[act], c[act])
+        np.add.at(infl, idx[act], c[act]); np.minimum.at(dmin, idx[act], dist[act])
         up = act & (c > best[idx]); best[idx[up]] = c[up]; bsrc[idx[up]] = sid[up]; bdist[idx[up]] = dist[up]
         n = C["down"][idx]; ok = act & (n >= 0)
         if not ok.any(): break
         dist[ok] += C["step"][idx[ok]]; idx[ok] = n[ok]; act = ok & (dist <= MAX_TRACE)
-    return infl, bsrc, bdist
+    return infl, bsrc, bdist, dmin
 
 def altered_fraction(C, w):
     """share of the upstream catchment with co-located Sentinel-2 iron-oxide (z>1.5) and clay (z>1.0) anomaly on slopes > 5 deg"""
@@ -104,7 +112,12 @@ def junction_score(C, cand):
 
 def run(w, src, gauges, storms, sma_ok, sma_bad, claims_act, wild):
     C = window_cells(w); H, W, tr = C["H"], C["W"], C["tr"]
-    infl, bsrc, bdist = source_influence(C, src)
+    core = is_core(src).values
+    srcC = src[core].reset_index(drop=True); srcP = src[~core].reset_index(drop=True)
+    inflC, bsrc, bdist, dcore = source_influence(C, srcC)
+    inflP, _, _, _ = source_influence(C, srcP)
+    infl = inflC + np.minimum(inflP, PIT_CAP)
+    src = srcC                                   # the reported "strongest source" is always a recorded gold source
     af = altered_fraction(C, w)
     Gs = 1 - np.exp(-infl / 2.5)          # saturates slowly: one producing mine at the cell ~0.33, several nearby -> ~1
     A = np.clip(af[0] / 0.05, 0, 1) if af is not None else np.zeros_like(Gs)
@@ -112,7 +125,7 @@ def run(w, src, gauges, storms, sma_ok, sma_bad, claims_act, wild):
     rows, cols = np.divmod(np.arange(H * W, dtype=np.int64), W)
     edge_px = (EDGE_M / C["dy"], EDGE_M / C["dx"])
     inner = (rows > edge_px[0]) & (rows < H - edge_px[0]) & (cols > edge_px[1]) & (cols < W - edge_px[1])
-    cand = np.flatnonzero(stream & inner & ((Gs > 0.05) | (A > 0.2))); del rows, cols
+    cand = np.flatnonzero(stream & inner & (dcore <= CORE_GATE_M) & (Gs > 0.05)); del rows, cols   # gate: recorded gold source <= 2 km upstream
     lon = tr.c + (cand % W + 0.5) * tr.a; lat = tr.f + (cand // W + 0.5) * tr.e
     ins = (lon >= STUDY[0]) & (lon <= STUDY[2]) & (lat >= STUDY[1]) & (lat <= STUDY[3]); cand, lon, lat = cand[ins], lon[ins], lat[ins]
     print(w, "candidate wash cells", len(cand), flush=True)
@@ -141,6 +154,8 @@ def run(w, src, gauges, storms, sma_ok, sma_bad, claims_act, wild):
     bi = bsrc[cand]
     df = pd.DataFrame({"window": w, "lon": lon, "lat": lat, "elev_m": z[cand], "drain_km2": C["acc"][cand] * C["cell_km2"],
                        "f_source": np.maximum(G, FLOOR), "source_basis": gtype, "source_influence_raw": infl[cand],
+                       "influence_recorded_gold": inflC[cand], "influence_topo_pits": inflP[cand], "pits_capped": inflP[cand] > PIT_CAP,
+                       "nearest_recorded_gold_upstream_m": dcore[cand],
                        "altered_frac_upstream": af[0][cand] if af is not None else np.nan,
                        "top_source_dataset": np.where(bi >= 0, src.src_dataset.values[np.maximum(bi, 0)], ""),
                        "top_source_id": np.where(bi >= 0, src.src_id.values[np.maximum(bi, 0)], ""),
@@ -174,10 +189,16 @@ def flood(df, gauges, storms):
     k = k[~k.index.duplicated()]
     ff = k.ff_dist_m <= 5000
     df["noaa_flood_event_id"] = np.where(ff, k.EVENT_ID, ""); df["noaa_flood_date"] = np.where(ff, k.BEGIN_DATE_TIME, ""); df["noaa_flood_dist_m"] = k.ff_dist_m.round(0)
-    P = np.fmax(df.radar_max24h_mm.astype(float), df.gauge_max_day_mm.astype(float))
-    df["rain_basis"] = np.where(df.radar_max24h_mm >= df.gauge_max_day_mm.fillna(-1), "MRMS radar (218 storm days 2021-01..2026-09, 5 km mean)", "RFCD gauge within 8 km (2000 to 2020-10-14)")
+    for name in ("recent_max24h_mm", "recent_max24h_date", "recent_total_mm", "baseline_total_mm"):
+        with rasterio.open(os.path.join(DATA, f"{name}.tif")) as s_:
+            df[name] = [v[0] for v in s_.sample(zip(df.lon, df.lat))]
+    df["recent_vs_normal"] = (df.recent_total_mm / df.baseline_total_mm.clip(lower=1)).round(2)
+    df["gauge_effective_mm"] = df.gauge_max_day_mm * np.exp(-df.gauge_dist_m / 5000)       # a gauge says less about a wash 5 km away
+    P = np.fmax(np.fmax(df.radar_max24h_mm.astype(float), df.recent_max24h_mm.astype(float)), df.gauge_effective_mm.astype(float))
+    df["rain_basis"] = np.where(np.fmax(df.radar_max24h_mm, df.recent_max24h_mm) >= df.gauge_effective_mm.fillna(-1), "MRMS radar (218 storm days 2021-01..2026-09, 5 km mean)", "RFCD gauge within 8 km (2000 to 2020-10-14)")
     df["storm_max_24h_mm"] = P
-    df["f_flood"] = np.clip(np.clip((P - 20) / 100, 0, 1) + 0.15 * ff.values, FLOOR, 1.0)   # 20 mm/24 h starts, 120 mm = full
+    df["fresh_storm_bonus"] = (np.clip((df.recent_max24h_mm - 20) / 60, 0, 1) * 0.2).round(3)   # Aug-Oct 2026 storm: fresh re-sorting
+    df["f_flood"] = np.clip(np.clip((P - 20) / 100, 0, 1) + 0.15 * ff.values + df.fresh_storm_bonus, FLOOR, 1.0)   # 20 mm/24 h starts, 120 mm = full
     df["flood_since"] = "2000-01-01 (no claim closing dates in BLM bulk data)"
     return df
 
@@ -229,6 +250,12 @@ if __name__ == "__main__":
     for w in (sys.argv[1:] or WINDOWS):
         frames.append(run(w, src, gauges, storms, sma_ok, sma_bad, claims_act, wild))
     df = pd.concat(frames, ignore_index=True)
+    roads = gpd.read_file(os.path.join(DATA, "roads.geojson")).to_crs(26911)
+    pts = gpd.GeoDataFrame(geometry=gpd.points_from_xy(df.lon, df.lat), crs=4326).to_crs(26911)
+    jr = gpd.sjoin_nearest(pts, roads[["geometry"]], how="left", distance_col="road_m"); jr = jr[~jr.index.duplicated()]
+    df["road_m"] = jr.road_m.round(0).values
+    df["trap_road_penalty"] = df.road_m < 30
+    df["f_trap"] = np.where(df.trap_road_penalty, np.maximum(df.f_trap * 0.5, FLOOR), df.f_trap)
     df = flood(df, gauges, storms)
     df = legal(df, sma_ok, sma_bad, claims_act, wild, claims_closed)
     df["score"] = df.f_source * df.f_flood * df.f_trap

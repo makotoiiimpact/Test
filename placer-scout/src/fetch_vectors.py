@@ -25,7 +25,7 @@ def save(fc, name, layer, url):
     log(layer, url, path, len(fc["features"]))
     print(name, len(fc["features"]), flush=True)
 
-what = sys.argv[1:] or ["claims", "sma", "mrds", "wild", "roads", "nca"]
+what = sys.argv[1:] or ["claims", "sma", "mrds", "wild", "roads", "nca", "trails"]
 if "claims" in what:
     keep = "ADMIN_STATE,BLM_PROD,CSE_DISP,CSE_TYPE_NR,CSE_NR,CSE_NAME,LOC_DT,RCRD_ACRS,MC_PATENTED,MC_EXCLUDED,MC_CONVEYED,OBJECTID"
     for lid, nm in ((1, "claims_active"), (2, "claims_closed")):
@@ -68,3 +68,18 @@ if "nca" in what:
     for url, nm in (("https://gis.blm.gov/arcgis/rest/services/lands/BLM_Natl_NLCS_NM_NCA_poly/MapServer/0", "nca_blm"),
                     ("https://gis.blm.gov/arcgis/rest/services/lands/BLM_Natl_ACEC/MapServer/0", "acec_blm")):
         fc = query(url, BOX, extra={"geometryPrecision": 5}); save(fc, nm + ".geojson", nm, url)
+if "trails" in what:
+    import geopandas as gpd, pandas as pd
+    parts = []
+    G = "https://gis.blm.gov/arcgis/rest/services/transportation/BLM_Natl_GTLF_Public_Display/MapServer"
+    names = {0: "BLM road, public motorized", 1: "BLM road, limited motorized", 2: "BLM trail, public motorized", 3: "BLM trail, limited motorized",
+             4: "BLM trail, non-motorized", 5: "BLM trail, non-mechanized (foot/horse)", 6: "BLM trail, not assessed", 7: "BLM trail, public"}
+    for lid, nm in names.items():
+        try: fc = query(f"{G}/{lid}", BOX, extra={"geometryPrecision": 5})
+        except Exception as e: print("GTLF", lid, "failed", e); continue
+        for f in fc["features"]: f["properties"] = {"route_class": nm, "name": (f["properties"].get("ROUTE_PRMRY_NM") or f["properties"].get("ROUTE_SCNDRY_SPCL_DSGTN_NM") or ""), "src": f"{G}/{lid}"}
+        save(fc, f"gtlf_{lid}.geojson", f"BLM GTLF {nm}", f"{G}/{lid}")
+    T = "https://carto.nationalmap.gov/arcgis/rest/services/transportation/MapServer/37"
+    fc = query(T, BOX, extra={"geometryPrecision": 5})
+    for f in fc["features"]: f["properties"] = {"route_class": "USGS trail", "name": f["properties"].get("name") or f["properties"].get("NAME") or "", "src": T}
+    save(fc, "usgs_trails.geojson", "USGS National Map trails", T)

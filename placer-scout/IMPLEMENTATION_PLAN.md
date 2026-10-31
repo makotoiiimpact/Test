@@ -144,3 +144,17 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
 - [ ] B5 tune with labels → full scan (only if ≥5 of 50 are real mounds)
 - [ ] B6 `out/ant_mounds.csv` + map layer
 - [ ] C REPORT Phase 2 section + verifier
+
+---
+## Model v2 (2026-10-31, owner request after Searchlight review)
+- [x] Gold source must include a **recorded** gold source (MRDS gold record, mill/plant, or USMIN tailings/mine dump) within
+      **2 km upstream** along the flow path; topo-map shafts/adits/pits add at most 0.5 (half a producing mine). Altered rock only
+      boosts spots that pass this gate.
+- [x] Trap within **30 m of a mapped road** counts half (road ditches/culverts/embankments fake junctions in 10 m DEMs);
+      1 m lidar confirmation restores it for the top 25.
+- [x] Flood: rain gauge value fades with distance (×e^(-d/5 km)); radar now read for **every day Aug 1 – Oct 30 2026** (incl. the
+      Oct 30–31 storm) plus the same window in 2023–25. Aug–Oct 2026 averaged 91 mm vs 54 mm (2023–25 mean). A "fresh storm"
+      bonus (up to +0.2) for this season's biggest 24 h rain.
+- [x] Result: 4,124 gated wash cells (1,106 legal) vs ~32,000 before; 15 of 25 targets replaced; 15 lidar rejections in 4 rounds.
+- [x] Trails: BLM GTLF routes + USGS National Map trails added. No legal scored wash is within 300 m of a mapped hiking trail
+      (closest 4.2 km); 141 are within 300 m of BLM-managed (mostly "limited motorized") routes → `out/blm_route_washes.csv`.

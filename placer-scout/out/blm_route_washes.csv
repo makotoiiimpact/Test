@@ -1,0 +1,11 @@
+district,lat,lon,score,trap_type,top_source_name,nearest_recorded_gold_upstream_m,blm_route,route_name,blm_route_m,recent_max24h_mm
+Searchlight,35.45578703650538,-114.89041666627983,0.1648649612531622,junction,Geneva Mill,1033.4877,"BLM road, limited motorized",,211.0,39.564
+Searchlight,35.49921296247802,-114.91495370334329,0.1459202626902215,widening,J. E. T.,245.33076,"BLM road, limited motorized",,118.0,20.208
+Searchlight,35.456435184654225,-114.91162037000636,0.1412968517244374,widening,Berlock Mine,596.9466,"BLM road, limited motorized",,13.0,39.964
+Goodsprings,35.70967592545223,-115.51949074049276,0.1224396615863722,slope_break,Milford Mine,1177.3853,"BLM road, limited motorized",,242.0,46.664
+Searchlight,35.43717592537424,-114.91986111075596,0.1188478218176447,junction,Rambler Mine,1828.436,"BLM road, limited motorized",,263.0,45.24
+Searchlight,35.44643518464346,-114.91421296260172,0.0560982272017497,widening,Rambler Mine,480.76047,"BLM road, limited motorized",,27.0,43.524002
+Searchlight,35.47115740689228,-114.8684722218118,0.0363208703324636,junction,Oakland Group,1990.0219,"BLM road, limited motorized",,261.0,26.536001
+Goodsprings,35.63421296240809,-115.50689814788664,0.0322263799703385,widening,Kalley,877.60736,"BLM road, limited motorized",,39.0,21.064001
+Searchlight,35.4637499994769,-114.93819444410902,0.0191708556412755,widening,Searchlight Parallel Mine,392.2143,"BLM road, limited motorized",,107.0,35.82
+Searchlight,35.4673611105919,-114.95921296265014,0.0151056766867392,none,Bay City Claim Group,1058.1365,"BLM road, limited motorized",,144.0,39.944

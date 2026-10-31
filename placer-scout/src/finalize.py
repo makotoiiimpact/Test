@@ -7,7 +7,9 @@ if "rank_10m" not in t.columns: t["rank_10m"] = t["rank"]
 alt = np.maximum.reduce([t.trap_slope_break.fillna(0), t.trap_junction.fillna(0), t.trap_widening.fillna(0)])
 fallback = np.where(t.trap_type == "widening", np.maximum(t.trap_slope_break, t.trap_junction),
            np.where(t.trap_type == "slope_break", np.maximum(t.trap_junction, t.trap_widening), alt))
-t["f_trap_lidar"] = np.where(t.lidar_confirms_trap == "no", np.maximum(fallback, FLOOR), t.f_trap).round(3)
+t["f_trap_lidar"] = np.where(t.lidar_confirms_trap == "no", np.maximum(fallback, FLOOR), t.f_trap)
+# a trap halved for sitting by a road gets its full value back when 1 m lidar confirms it is a real channel feature
+t["f_trap_lidar"] = np.where((t.lidar_confirms_trap == "yes") & t.trap_road_penalty.astype(bool), np.minimum(1.0, t.f_trap * 2), t.f_trap_lidar).round(3)
 t["score_10m"] = t.score
 t["score"] = (t.f_source * t.f_flood * t.f_trap_lidar).round(3)
 t = t.sort_values(["score", "score_10m"], ascending=False).reset_index(drop=True); t["rank"] = range(1, len(t) + 1)

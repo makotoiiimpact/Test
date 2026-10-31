@@ -12,10 +12,10 @@ ll = lambda la, lo: f"{la:.5f}, {lo:.5f}"
 TRIPS = {
  "A · Nelson / Eldorado": ("Start here. Closest to Las Vegas, all stops are short walks, and it settles the ant-mound question while checking the #1 target.",
    "From Henderson, take US-95 south toward Searchlight, then turn east on NV-165 (Nelson Road) toward Nelson. The stops sit along NV-165 and the dirt roads north and south of it, before the road drops into Eldorado Canyon. Lower Eldorado Canyon and the river are Lake Mead NRA: no drones there."),
- "B · Searchlight": ("Most targets in one place, nearly all easy walks. Several sit right against private land and old shafts, so read each card's warnings.",
+ "B · Searchlight": ("Mostly short walks. Several sit right against private land and old shafts, so read each card's warnings.",
    "Take US-95 south from Henderson to Searchlight. The targets are on the edge of town and along Cottonwood Cove Road east of US-95. Avi Kwa Ame National Monument surrounds this area: stay on the targets listed, which are outside it."),
  "C · Goodsprings": ("Longer walks and rougher ground. Do it after A and B, early in the day, with plenty of water.",
-   "Take I-15 south to Jean, then NV-161 west to Goodsprings. Most targets are on dirt roads in the hills west and north of town. Some need a high-clearance vehicle; #16 and #18 are long hikes."),
+   "Take I-15 south to Jean, then NV-161 west to Goodsprings. Most targets are on dirt roads in the hills west and north of town. Some need a high-clearance vehicle."),
  "D · Other": ("One target at the south edge of the Las Vegas valley, near Blue Diamond.", "Off S Fort Apache Rd at the south edge of the valley."),
 }
 
@@ -73,7 +73,9 @@ for name in TRIPS:
     if not rs: continue
     why, how = TRIPS[name]
     toc = " · ".join(f'<a href="#{r["trip"][0]}{int(r["stop_no"])}">{r["trip"][0]}{int(r["stop_no"])} {E(r["name"].replace("Ant mound clip area (50 spots)", "Clip area"))}</a>' for r in rs)
-    trips.append(f"""<section class="trip" id="trip-{name[0]}"><h2>Trip {E(name)}</h2><p class="why">{E(why)}</p><p>{E(how)}</p><p class="toc">{toc}</p>{''.join(card(r) for r in rs)}</section>""")
+    hard = [f"{r['name']} ({r['walk_m'] / 1000:.1f} km, {r['climb_m']} m climb)" for r in rs if r["walk_m"] >= 500 or r["climb_m"] >= 80]
+    how2 = how + (" Long hikes: " + "; ".join(hard) + "." if hard else "")
+    trips.append(f"""<section class="trip" id="trip-{name[0]}"><h2>Trip {E(name)}</h2><p class="why">{E(why)}</p><p>{E(how2)}</p><p class="toc">{toc}</p>{''.join(card(r) for r in rs)}</section>""")
 
 page = r"""<title>Placer Scout Field Plan</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -125,8 +127,8 @@ a{color:var(--accent)}
 
 <section class="box"><h2>Where to start</h2>
 <ol><li><b>Trip A (Nelson) first.</b> It is the closest, the walks are short, and it answers the two biggest open questions in one morning: are the ant "clearings" real, and is the #1 target a real gold trap?</li>
-<li><b>Trip B (Searchlight) next.</b> Ten targets, mostly right off the road. Several sit tight against private land and old shafts, so watch the red and amber warnings.</li>
-<li><b>Trip C (Goodsprings) last.</b> Longer, rougher walks. Skip #16 and #18 unless you're set up for a real hike.</li></ol>
+<li><b>Trip B (Searchlight) next.</b> __NB__ targets, mostly close to the road. Several sit tight against private land and old shafts, so watch the red and amber warnings.</li>
+<li><b>Trip C (Goodsprings) last.</b> Longer, rougher walks. __HARD_C__</li></ol>
 <p class="small">Bring the files from the chat: <b>field_plan.kml</b> (launch points, targets and wash flight lines for Google Earth or a GPS app), <b>clip_spots.gpx</b> and <b>targets.gpx</b>.</p></section>
 
 <section class="box"><h2>Data that raises confidence</h2>
@@ -154,5 +156,8 @@ a{color:var(--accent)}
 __TRIPS__
 <p class="small">Launch points are the nearest public road to each target, chosen off Park Service land, private land and wilderness. Walks and climbs come from 10 m elevation data, and wash lines from the 10 m flow model, so expect small offsets on the ground. Land status comes from BLM maps; check the claim link in targets.csv before you go.</p>
 </div>"""
-open(os.path.join(OUT, "field_plan.html"), "w").write(page.replace("__TRIPS__", "".join(trips)))
+nb = sum(1 for r in R if r["trip"].startswith("B") and r["kind"] == "target")
+hc = [r["name"] for r in R if r["trip"].startswith("C") and (r["walk_m"] >= 1500 or r["climb_m"] >= 150)]
+hard_c = ("Skip " + " and ".join(hc) + " unless you're set up for a real hike.") if hc else "No long hikes on this trip."
+open(os.path.join(OUT, "field_plan.html"), "w").write(page.replace("__TRIPS__", "".join(trips)).replace("__NB__", {7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}.get(nb, str(nb))).replace("__HARD_C__", hard_c))
 print("field_plan.html KB", os.path.getsize(os.path.join(OUT, "field_plan.html")) // 1024)

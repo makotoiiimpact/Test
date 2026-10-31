@@ -66,9 +66,12 @@ cols = ["rank", "lat", "lon", "district", "score", "f_source", "f_flood", "f_tra
         "top_source_kind", "top_source_dist_m", "top_source_url", "altered_frac_upstream", "trap_type", "trap_slope_break", "trap_junction",
         "trap_widening", "grad_up", "grad_down", "floor_width_m", "floor_width_up_m", "drain_km2", "elev_m", "storm_max_24h_mm", "rain_basis",
         "radar_max24h_mm", "radar_max_date", "gauge_name", "gauge_dist_m", "gauge_max_day_mm", "gauge_max_date", "noaa_flood_event_id",
-        "noaa_flood_date", "noaa_flood_dist_m", "flood_since", "closed_claim_case", "nearest_named_mine", "nearest_named_mine_m", "at_named_mine", "window"]
+        "noaa_flood_date", "noaa_flood_dist_m", "flood_since", "gauge_effective_mm", "recent_max24h_mm", "recent_max24h_date", "recent_total_mm",
+        "baseline_total_mm", "recent_vs_normal", "fresh_storm_bonus", "road_m", "trap_road_penalty", "nearest_recorded_gold_upstream_m",
+        "influence_recorded_gold", "influence_topo_pits", "pits_capped", "closed_claim_case", "nearest_named_mine", "nearest_named_mine_m", "at_named_mine", "window"]
 for c in ("score", "f_source", "f_flood", "f_trap", "altered_frac_upstream", "trap_slope_break", "trap_junction", "trap_widening", "grad_up", "grad_down",
-          "storm_max_24h_mm", "radar_max24h_mm", "gauge_max_day_mm", "drain_km2"):
+          "storm_max_24h_mm", "radar_max24h_mm", "gauge_max_day_mm", "drain_km2", "gauge_effective_mm", "recent_max24h_mm",
+          "recent_total_mm", "baseline_total_mm", "influence_recorded_gold", "influence_topo_pits", "nearest_recorded_gold_upstream_m"):
     t[c] = t[c].astype(float).round(3)
 t[cols].to_csv(os.path.join(OUT, "targets.csv"), index=False)
 legal.head(600).to_csv(os.path.join(DATA, "candidates_top600.csv"), index=False)

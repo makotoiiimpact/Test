@@ -4,6 +4,11 @@ import pandas as pd
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "out")
 t = pd.read_csv(os.path.join(OUT, "targets.csv"))
+_cells = pd.read_csv(os.path.join(OUT, "..", "data", "scored_cells.csv.gz"), usecols=["legal_ok"], low_memory=False)
+N_CELLS, N_LEGAL = len(_cells), int(_cells.legal_ok.sum())
+_rej = os.path.join(OUT, "..", "data", "lidar_rejected.csv")
+N_REJ = len(pd.read_csv(_rej)) if os.path.exists(_rej) else 0
+N_CLOSED10 = int(t.head(10).closed_claim_case.notna().sum())
 
 def km(m): return f"{m/1000:.1f} km ({m/1609:.1f} miles)"
 def ft(m): return f"{m*3.281:,.0f} feet"
@@ -42,12 +47,16 @@ def trap_text(r):
 def flood_text(r):
     if str(r.rain_basis).startswith("MRMS"):
         d = date(r.radar_max_date)
-        s = (f"Weather radar was checked on 218 stormy days since 2021. The biggest one-day rain it measured near here was about "
+        s = (f"Weather radar was checked on 218 stormy days from 2021 to September 2026 and on every day from August to October 2026. The biggest one-day rain it measured near here was about "
              f"{r.storm_max_24h_mm:.0f} mm ({r.storm_max_24h_mm/25.4:.1f} inches){', on ' + d if d else ''}.")
     else:
         d = date(r.gauge_max_date)
         s = (f"The {r.gauge_name} rain gauge, {km(r.gauge_dist_m)} away, recorded {r.storm_max_24h_mm:.0f} mm ({r.storm_max_24h_mm/25.4:.1f} inches) of rain in one day"
              f"{' on ' + d if d else ''}. That is the biggest day it logged before 2021, when this tool starts using radar.")
+    if r.recent_max24h_mm >= 20:
+        d2 = date(r.recent_max24h_date)
+        s += (f" This season was wetter than usual here: about {r.recent_total_mm:.0f} mm fell from August through October 2026, "
+              f"{r.recent_vs_normal:.1f} times the 2023–2025 average, with {r.recent_max24h_mm:.0f} mm in one day{' on ' + d2 if d2 else ''}.")
     if isinstance(r.noaa_flood_date, str) and r.noaa_flood_dist_m <= 5000:
         d = date(r.noaa_flood_date[:9]) or r.noaa_flood_date[:9]
         s += f" The National Weather Service also logged a flash flood {km(r.noaa_flood_dist_m)} away on {d}."
@@ -58,15 +67,15 @@ L.append("# placer-scout report\n")
 L.append(f"*Made {datetime.date.today():%B %-d, %Y}. Study area: southern Clark County, Nevada (Goodsprings, Eldorado Canyon/Nelson, and Searchlight districts).*\n")
 L.append("## What this is\n")
 L.append("This report lists places where a flash flood may have washed gold down from old mines into a desert wash. "
-         "The computer looked at about 33,000 spots along washes. It kept only spots on Bureau of Land Management (BLM) land that are not inside an active mining claim. "
+         f"The computer kept {N_CELLS:,} spots along washes that have a recorded gold mine, mill or mine dump within 2 km upstream. {N_LEGAL:,} of them are on Bureau of Land Management (BLM) land and not inside an active mining claim, wilderness, or a national monument. "
          "Then it ranked them. This is a rough guide for where to look first. It does not prove there is gold anywhere, and it is not a legal land survey.\n")
 L.append("## How to read the score\n")
 L.append("Each spot gets three numbers from 0.1 to 1. They are multiplied together to make the total score.\n")
-L.append("- **Gold source** asks: is there a gold mine, mill, mine dump, or rusty altered rock uphill, and how close is it? Closer sources count more. A source more than 8 km (5 miles) away does not count.")
-L.append("- **Flood** asks: how big was the biggest one-day storm here since 2000? About 20 mm (0.8 inch) of rain starts to count, and 120 mm (4.7 inches) counts fully. A flash flood report nearby adds a little more.")
-L.append("- **Gold trap** asks: is this a place where fast water slows down? The computer looks for a side wash joining, a wash getting wider, or a wash getting less steep.\n")
+L.append("- **Gold source** asks: is there a recorded gold mine, mill, or mine dump uphill, and how close is it? A spot only makes the list if one lies within 2 km (1.2 miles) upstream. Old prospect pits and shafts on topo maps add a little, but never as much as a real producing mine. Rusty altered rock adds a bit more.")
+L.append("- **Flood** asks: how big was the biggest one-day storm here since 2000? About 20 mm (0.8 inch) of rain starts to count, and 120 mm (4.7 inches) counts fully. A rain gauge counts for less the farther away it is. A flash flood report nearby adds a little, and a big storm this August to October adds a little more, because fresh floods re-sort the gravel.")
+L.append("- **Gold trap** asks: is this a place where fast water slows down? The computer looks for a side wash joining, a wash getting wider, or a wash getting less steep. A trap within 30 m (100 ft) of a road counts half, because road ditches and culverts can fake one, unless the 1 m lidar map confirms it.\n")
 L.append("Each place also has a land-survey address, like *T26S R64E Sec 19*. This is the township, range, and section the BLM uses to file mining claims. You can type it into the BLM claim map (MLRS) to look for new claims.\n")
-L.append("Every one of the top 10 sits on ground that once had a mining claim that is now closed. That is normal here, because these districts have been prospected for over 100 years. It also means people have staked claims near these spots before.\n")
+L.append(f"{'All' if N_CLOSED10 == 10 else N_CLOSED10} of the top 10 sit on ground that once had a mining claim that is now closed. That is normal here, because these districts have been prospected for over 100 years. It also means people have staked claims near these spots before.\n")
 L.append("All the numbers and their sources are in `targets.csv`. The map is `map.html`. Open it in a web browser and turn layers on and off in the box at the top right.\n")
 L.append("## Top 10 places\n")
 for _, r in t.head(10).iterrows():
@@ -81,9 +90,9 @@ L.append("## What the computer could not do\n")
 L.append("- **Claim closing dates are missing.** The BLM mining-claim map has no closing date for old claims. So the tool could not tell when each wash was last worked. It counted storms since January 1, 2000 everywhere instead.")
 L.append("- **Some data could not be reached.** The Nevada Bureau of Mines and Geology website was blocked from this computer, so its district reports were not used. The USGS place-names list had almost no mines in it.")
 L.append("- **Mine records say little about gold amount.** A mine on the list may have produced only a small amount of gold. Many Goodsprings mines were mainly lead and zinc mines.")
-L.append("- **The 10 m map is coarse.** The 1 m lidar map did not agree with 10 of the wash-widening spots the 10 m map picked. Those spots were removed. Most of the final traps are side-wash junctions, which the lidar check cannot test.")
+L.append(f"- **The 10 m map is coarse.** The 1 m lidar map did not agree with {N_REJ} of the wash-widening and slope-break spots the 10 m map picked. Those spots were removed. Most of the final traps are side-wash junctions, which the lidar check cannot test.")
 L.append("- **Satellite before-and-after pictures showed no clear change** at any of the 25 places. Desert washes are narrow, and the satellite pixels are 20 m wide, so small changes are hard to see.")
-L.append("- **Radar was only checked on 218 stormy days** (January 2021 to September 2026), not every day. Days with no gauge rain and no storm report were skipped, so a local storm could have been missed. Radar values are averaged over about 5 km. Before 2021, the tool used Clark County rain gauges within 8 km, and many washes have no gauge that close.")
+L.append("- **Radar was not checked every day before August 2026.** From 2021 to July 2026 only 218 stormy days were read; days with no gauge rain and no storm report were skipped, so a local storm could have been missed. Every day from August 1 to October 30, 2026 was read, including the storm of October 30–31. Radar values are averaged over about 5 km. Before 2021, the tool used Clark County rain gauges within 8 km, and many washes have no gauge that close.")
 L.append("- **Old maps list many small prospect pits.** Repeat copies of the same pit from different map years were removed, but a wash below lots of pits can still look stronger than it really is.\n")
 L.append("## Land and legal notes\n")
 L.append("- The tool removed National Park Service land (including Lake Mead National Recreation Area), Forest Service land, state land, private land, BLM wilderness, and active mining claims.")
