@@ -1,0 +1,104 @@
+"""Step 3c: out/REPORT.md - plain-language report (about 9th-grade level). Every sentence about a target comes from targets.csv."""
+import os, datetime
+import pandas as pd
+
+OUT = os.path.join(os.path.dirname(__file__), "..", "out")
+t = pd.read_csv(os.path.join(OUT, "targets.csv"))
+
+def km(m): return f"{m/1000:.1f} km ({m/1609:.1f} miles)"
+def ft(m): return f"{m*3.281:,.0f} feet"
+def date(s):
+    try: return pd.to_datetime(str(int(s)), format="%Y%m%d").strftime("%B %-d, %Y")
+    except Exception:
+        try: return pd.to_datetime(s).strftime("%B %-d, %Y")
+        except Exception: return None
+def level(x): return "very strong" if x >= 0.9 else "strong" if x >= 0.7 else "medium" if x >= 0.45 else "weak"
+def source_text(r):
+    nm = str(r.top_source_name)
+    if "|" in nm:
+        kind, rest = [s.strip() for s in nm.split("|", 1)]
+        what = f"an old {kind.lower()} shown on the {rest.replace('topo ', '')} USGS topographic map"
+    elif r.top_source_dataset == "USMIN_topo":
+        what = f"an old mine {nm.lower()} marked on a USGS topographic map"
+    else:
+        what = f"the {nm}" if not nm.lower().startswith("the ") else nm
+    d = r.top_source_dist_m
+    where = "right at this spot" if d < 50 else f"about {ft(d)} uphill along the wash"
+    s = f"The strongest gold source upstream is {what}, {where}."
+    if r.source_basis == "altered_rock":
+        s = f"No mapped gold mine drains here, but satellite images show rusty, clay-rich rock on {r.altered_frac_upstream*100:.0f}% of the slopes above it."
+    elif r.altered_frac_upstream >= 0.05:
+        s += f" Satellite images also show rusty, clay-rich rock on about {r.altered_frac_upstream*100:.0f}% of the slopes that drain here."
+    return s
+def trap_text(r):
+    if r.trap_type == "junction":
+        s = "A side wash joins the main wash here. Water slows down where two washes meet, so heavy gold can drop out."
+    elif r.trap_type == "widening":
+        s = f"The wash floor gets wider here, from about {r.floor_width_up_m:.0f} m to {r.floor_width_m:.0f} m on the 10 m map. Water spreads out and slows where a wash widens."
+    else:
+        s = f"The wash gets less steep here, from a {r.grad_up*100:.1f}% slope above to {r.grad_down*100:.1f}% below. Water slows down where the slope eases."
+    if r.lidar_confirms_trap == "yes": s += " The 1 m lidar map agrees with this."
+    return s
+def flood_text(r):
+    if str(r.rain_basis).startswith("MRMS"):
+        d = date(r.radar_max_date)
+        s = (f"Weather radar was checked on 218 stormy days since 2021. The biggest one-day rain it measured near here was about "
+             f"{r.storm_max_24h_mm:.0f} mm ({r.storm_max_24h_mm/25.4:.1f} inches){', on ' + d if d else ''}.")
+    else:
+        d = date(r.gauge_max_date)
+        s = (f"The {r.gauge_name} rain gauge, {km(r.gauge_dist_m)} away, recorded {r.storm_max_24h_mm:.0f} mm ({r.storm_max_24h_mm/25.4:.1f} inches) of rain in one day"
+             f"{' on ' + d if d else ''}. That is the biggest day it logged before 2021, when this tool starts using radar.")
+    if isinstance(r.noaa_flood_date, str) and r.noaa_flood_dist_m <= 5000:
+        d = date(r.noaa_flood_date[:9]) or r.noaa_flood_date[:9]
+        s += f" The National Weather Service also logged a flash flood {km(r.noaa_flood_dist_m)} away on {d}."
+    return s
+
+L = []
+L.append("# placer-scout report\n")
+L.append(f"*Made {datetime.date.today():%B %-d, %Y}. Study area: southern Clark County, Nevada (Goodsprings, Eldorado Canyon/Nelson, and Searchlight districts).*\n")
+L.append("## What this is\n")
+L.append("This report lists places where a flash flood may have washed gold down from old mines into a desert wash. "
+         "The computer looked at about 33,000 spots along washes. It kept only spots on Bureau of Land Management (BLM) land that are not inside an active mining claim. "
+         "Then it ranked them. This is a rough guide for where to look first. It does not prove there is gold anywhere, and it is not a legal land survey.\n")
+L.append("## How to read the score\n")
+L.append("Each spot gets three numbers from 0.1 to 1. They are multiplied together to make the total score.\n")
+L.append("- **Gold source** asks: is there a gold mine, mill, mine dump, or rusty altered rock uphill, and how close is it? Closer sources count more. A source more than 8 km (5 miles) away does not count.")
+L.append("- **Flood** asks: how big was the biggest one-day storm here since 2000? About 20 mm (0.8 inch) of rain starts to count, and 120 mm (4.7 inches) counts fully. A flash flood report nearby adds a little more.")
+L.append("- **Gold trap** asks: is this a place where fast water slows down? The computer looks for a side wash joining, a wash getting wider, or a wash getting less steep.\n")
+L.append("Each place also has a land-survey address, like *T26S R64E Sec 19*. This is the township, range, and section the BLM uses to file mining claims. You can type it into the BLM claim map (MLRS) to look for new claims.\n")
+L.append("Every one of the top 10 sits on ground that once had a mining claim that is now closed. That is normal here, because these districts have been prospected for over 100 years. It also means people have staked claims near these spots before.\n")
+L.append("All the numbers and their sources are in `targets.csv`. The map is `map.html`. Open it in a web browser and turn layers on and off in the box at the top right.\n")
+L.append("## Top 10 places\n")
+for _, r in t.head(10).iterrows():
+    road = r.nearest_road.replace("unnamed (", "an unnamed ").replace(")", "") if r.nearest_road.startswith("unnamed") else r.nearest_road
+    p = (f"**#{int(r['rank'])} — {r.district} wash, {r.lat:.5f}, {r.lon:.5f}** (score {r.score:.2f} = gold source {r.f_source:.2f} × flood {r.f_flood:.2f} × trap {r.f_trap_lidar:.2f})\n\n"
+         f"{source_text(r)} The gold-source signal is {level(r.f_source)}. {flood_text(r)} {trap_text(r)} "
+         f"This spot is on BLM land in {r.plss}. It is about {ft(r.nearest_road_m)} from {road}. "
+         + (f"Be careful here: {'private land' if 'Private' in str(r.nearest_exclusion) else 'an active mining claim' if 'claim' in str(r.nearest_exclusion) else 'closed land'} is only about {ft(r.nearest_exclusion_m)} away. " if r.nearest_exclusion_m < 100 else "")
+         + f"Re-check claims with the link in `targets.csv` before you go.\n")
+    L.append(p)
+L.append("## What the computer could not do\n")
+L.append("- **Claim closing dates are missing.** The BLM mining-claim map has no closing date for old claims. So the tool could not tell when each wash was last worked. It counted storms since January 1, 2000 everywhere instead.")
+L.append("- **Some data could not be reached.** The Nevada Bureau of Mines and Geology website was blocked from this computer, so its district reports were not used. The USGS place-names list had almost no mines in it.")
+L.append("- **Mine records say little about gold amount.** A mine on the list may have produced only a small amount of gold. Many Goodsprings mines were mainly lead and zinc mines.")
+L.append("- **The 10 m map is coarse.** The 1 m lidar map did not agree with 10 of the wash-widening spots the 10 m map picked. Those spots were removed. Most of the final traps are side-wash junctions, which the lidar check cannot test.")
+L.append("- **Satellite before-and-after pictures showed no clear change** at any of the 25 places. Desert washes are narrow, and the satellite pixels are 20 m wide, so small changes are hard to see.")
+L.append("- **Radar was only checked on 218 stormy days** (January 2021 to September 2026), not every day. Days with no gauge rain and no storm report were skipped, so a local storm could have been missed. Radar values are averaged over about 5 km. Before 2021, the tool used Clark County rain gauges within 8 km, and many washes have no gauge that close.")
+L.append("- **Old maps list many small prospect pits.** Repeat copies of the same pit from different map years were removed, but a wash below lots of pits can still look stronger than it really is.\n")
+L.append("## Land and legal notes\n")
+L.append("- The tool removed National Park Service land (including Lake Mead National Recreation Area), Forest Service land, state land, private land, BLM wilderness, and active mining claims.")
+L.append("- It also removed **Avi Kwa Ame National Monument**, Sloan Canyon, and Red Rock Canyon. These BLM areas are closed to new mining claims. This removed much of the land around Searchlight. Ask the BLM Las Vegas Field Office if hobby gold panning is allowed there before you go.")
+L.append("- Patented (privately owned) mining claims are not marked in the BLM claim data. The tool relied on the BLM land map to catch them. Old patented claims are common in Goodsprings, Searchlight, and Nelson. Watch for signs and fences.")
+L.append("- BLM land is usually open for casual gold panning with hand tools. You may not dig large holes, use motors, or disturb a lot of ground without permission. Do not work on anyone's active claim.\n")
+L.append("## Safety\n")
+L.append("- **Never enter old mine shafts or tunnels.** They can collapse, have bad air, or hide deep drops. Stay well back from open holes.")
+L.append("- **Never work in a wash when storms are possible.** Flash floods can come from rain miles away, even when the sky above you is clear. Check the forecast and leave if clouds build.")
+L.append("- **Treat old mill waste as dangerous.** Old mills often used mercury to catch gold, and the waste can still hold mercury and arsenic. Do not dig in it, do not breathe its dust, and wash your hands and gear.")
+L.append("- Bring plenty of water, tell someone where you are going, and watch for rattlesnakes. Many places have no cell signal.\n")
+L.append("## Where the data came from\n")
+L.append("BLM mining claims and land status (gis.blm.gov, nlsdbpubgis.blm.gov); USGS mine records (MRDS) and old topographic map mine features (USMIN, mrdata.usgs.gov); "
+         "USGS 3DEP elevation, 10 m and 1 m lidar (prd-tnm.s3.amazonaws.com); Sentinel-2 satellite images (Earth Search, AWS); "
+         "NOAA MRMS weather radar (noaa-mrms-pds on AWS); NOAA Storm Events (ncei.noaa.gov); Clark County Regional Flood Control District rain gauges (gustfront.ccrfcd.org); "
+         "Census TIGER roads. Every download is listed with its address, date, and file check code in `data/PROVENANCE.csv`.\n")
+open(os.path.join(OUT, "REPORT.md"), "w").write("\n".join(L))
+print("\n".join(L)[:6000])
