@@ -110,3 +110,37 @@ Status: [ ] waiting on Phase 1 (blocked by network allowlist; see Step 1 note)
 - [ ] A4 Google Earth / Maps links per target
 - [ ] A5 `out/targets.kml` + REPORT.md sentence
 - [ ] A6 Verifier subagent + fixes + report to owner
+
+---
+## Phase 2: L-208 shutdown mines + harvester ant mounds
+Gate: Phase 1 passed its verifier (yes, 2026-10-31).
+
+### Spec fixes from Phase 2 review
+- **L-208 facts**: WPB Order L-208 issued Oct 8, 1942; effective Dec 8, 1942; revoked effective July 1, 1945 (June 30 in some sources).
+  Small mines (≤1,200 tons in 1941) and copper/lead/zinc mines were exempt, so Goodsprings Pb-Zn mines are poor test cases.
+- **Test changed**: "no production after 1942" alone is not enough. Classes: *strong* = active 1942, stopped Dec 1942, no record through 1947;
+  *medium* = active 1942, stopped 1943; *stopped at L-208, reopened*; *possible* = last record 1941 (1942 yearbook silent ≠ shutdown);
+  *not a candidate*. Field is "last recorded year" in the yearbooks, never inferred from silence.
+- **Yearbook years**: 1939 and 1940 editions report the prior year; 1940 data is in the separate "Review of 1940" volume; 1941+ report
+  their own year. All verified from each volume's text.
+- **Scoring rule (A7)**: a 1942 shutdown does not add gold to washes; kept as the owner asked but small and visible
+  (`l208_boost` on the source weight), mill tailings being the one physical reason.
+- **Ant mounds**: the common Mojave harvester (*Veromessor pergandei*) makes 30–45 cm craters with no cleared disc; 1–3 m discs are
+  *Pogonomyrmex*, sparse in creosote scrub. At 0.6 m NAIP a 2.5–3 m disc is 4–5 px. Kept the owner-review gate; clips sample 35 top +
+  15 lower-band picks; 2019 is shown beside 2022 for persistence. Field note: harvester ants sting; scan, don't dig.
+- **NAIP**: newest Nevada NAIP is 2022 at 0.6 m (not coarser than 60 cm, so no stop). Original COGs from Planetary Computer
+  (anonymous SAS token, no account); the USGS NAIPPlus service is keyless but recompressed. 2019 (0.6 m) used for persistence.
+
+### Steps
+- [x] A1 Minerals Yearbooks 1939–1947 + Review of 1940 (archive.org OCR, page-indexed) → Clark County passages
+- [x] A2–A6 `out/l208_mines.csv` (19 mines) + `data/l208/l208_evidence.csv` (59 records, every quote auto-verified on its cited page).
+      [!] NBMG Clark County bulletins and Nevada Inspector of Mines reports not reachable (nbmg.unr.edu, HathiTrust blocked).
+      [!] 1947 Searchlight paragraph partly unreadable in OCR (continues after a rotated table).
+- [ ] A4 dumps/mill sites near candidates (USMIN tailings/dump polygons + NAIP clips)
+- [ ] A7 `l208_boost` in scoring, then rerun Phase 1 pipeline
+- [x] B1 NAIP resolution check (2022, 0.6 m)
+- [x] B3–B4 detector on one test area (Nelson, below Rand/Quaker City, BLM only); 50 clips; review page published
+      (private artifact with saved answers). **Waiting for owner review.**
+- [ ] B5 tune with labels → full scan (only if ≥5 of 50 are real mounds)
+- [ ] B6 `out/ant_mounds.csv` + map layer
+- [ ] C REPORT Phase 2 section + verifier
