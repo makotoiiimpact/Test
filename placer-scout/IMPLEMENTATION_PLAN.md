@@ -162,3 +162,6 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
 
 ## Field plan v3 (2026-10-31)
 - [x] Field plan narrowed to the top 8 targets (strong tier); ant-mound clip stops removed; after-rain safety section added.
+- [x] Radar check (2026-10-31): MRMS Aug–Oct totals vs official RFCD daily files, 2023–25, at 25 study-area gauges: radar/gauge median
+      1.49 (radar high). Year-to-year comparisons (radar vs radar) stand; absolute mm read high. The live gauge API
+      (gaugeservices/geojson) returns 0 for past windows (tested on 2025 storms), so it cannot check 2026; Oct 30–31 storm unconfirmed.
