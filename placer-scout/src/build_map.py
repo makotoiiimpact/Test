@@ -9,9 +9,10 @@ DATA = os.path.join(os.path.dirname(__file__), "..", "data"); OUT = os.path.join
 t = pd.read_csv(os.path.join(OUT, "targets.csv"), dtype=str)
 cand = pd.read_csv(os.path.join(DATA, "candidates_top600.csv"))
 m = folium.Map(location=[35.65, -115.1], zoom_start=10, tiles=None, control_scale=True)
-folium.TileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}", attr="USGS The National Map", name="USGS Topo", max_zoom=16).add_to(m)
-folium.TileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}", attr="USGS The National Map", name="USGS Imagery + Topo", max_zoom=16).add_to(m)
-folium.TileLayer("OpenStreetMap", name="OpenStreetMap").add_to(m)
+# USGS basemaps only: they load from a downloaded file. OpenStreetMap's servers refuse file:// pages (no Referer) with "Access blocked".
+USGS = "https://basemap.nationalmap.gov/arcgis/rest/services/{}/MapServer/tile/{{z}}/{{y}}/{{x}}"
+for svc, name, on in (("USGSTopo", "USGS Topo", True), ("USGSImageryTopo", "USGS Imagery + Topo", False), ("USGSImageryOnly", "USGS Imagery", False)):
+    folium.TileLayer(USGS.format(svc), attr="USGS The National Map", name=name, max_zoom=16, show=on).add_to(m)
 
 from shapely.ops import unary_union
 def polys_only(geom):
