@@ -1,0 +1,491 @@
+<title>Placer Scout Field Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* layout: one column field guide; trip sections, stop cards, compact fact rows; coordinates in mono */
+:root{--bg:#f1ede3;--card:#fbf9f3;--ink:#2a2822;--muted:#6c675a;--line:#d9d1bf;--accent:#8a4b12;--accent-bg:#f2dfc6;--warn:#8a5a00;--warn-bg:#f6e7bf;--danger:#9b2c1f;--danger-bg:#f6d6d0;--info:#3d5a6b;--info-bg:#dde7ec;--ok:#3f6b2f;
+--display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1b17;--card:#25241f;--ink:#ece7da;--muted:#a8a291;--line:#3b3930;--accent:#e2a25c;--accent-bg:#3c2b16;--warn:#e7c066;--warn-bg:#3a3017;--danger:#f19a8c;--danger-bg:#3d211c;--info:#a3c3d3;--info-bg:#22313a;--ok:#9fcb86;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1b17;--card:#25241f;--ink:#ece7da;--muted:#a8a291;--line:#3b3930;--accent:#e2a25c;--accent-bg:#3c2b16;--warn:#e7c066;--warn-bg:#3a3017;--danger:#f19a8c;--danger-bg:#3d211c;--info:#a3c3d3;--info-bg:#22313a;--ok:#9fcb86;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:820px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 56px;display:grid;gap:22px}
+h1{font:700 2rem/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:700 1.45rem/1.2 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.15rem/1.2 var(--display);margin:0}
+h4{font:600 .82rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 .3rem}
+p{margin:.35rem 0;max-width:68ch}ol,ul{margin:.2rem 0;padding-left:1.25rem;display:grid;gap:.3rem;max-width:68ch}
+a{color:var(--accent)}
+.lede{color:var(--muted);max-width:68ch}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.trip{display:grid;gap:14px;padding-top:6px;border-top:2px solid var(--ink)}
+.why{font-weight:700}
+.toc{font-size:.9rem;color:var(--muted)}.toc a{white-space:nowrap}
+.stop{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:12px;min-width:0;scroll-margin-top:12px}
+.stop header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.code{font:700 .9rem var(--display);background:var(--ink);color:var(--card);border-radius:4px;padding:1px 7px}
+.score{margin-left:auto;font:600 .85rem var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.facts{display:grid;gap:4px}.facts>div{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:8px}
+.k{font:600 .78rem var(--display);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.mono{font:500 .88rem var(--mono);overflow-wrap:anywhere}
+.rate{font:600 .78rem var(--display);letter-spacing:.06em;text-transform:uppercase;padding:0 6px;border-radius:4px}
+.rate.easy{color:var(--ok);border:1px solid var(--ok)}.rate.moderate{color:var(--warn);border:1px solid var(--warn)}.rate.hard{color:var(--danger);border:1px solid var(--danger)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:700 .95rem var(--body);text-decoration:none;padding:.55rem .9rem;border-radius:6px;background:var(--accent);color:var(--card)}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.flags{display:flex;flex-wrap:wrap;gap:6px}
+.flag{font-size:.86rem;padding:3px 8px;border-radius:5px}
+.flag.warn{background:var(--warn-bg);color:var(--warn)}.flag.danger{background:var(--danger-bg);color:var(--danger);font-weight:700}.flag.info{background:var(--info-bg);color:var(--info)}
+.block{border-top:1px solid var(--line);padding-top:10px}
+.small{font-size:.88rem;color:var(--muted)}
+.sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:8px 18px;margin-top:6px}
+.sheet div{border-left:3px solid var(--accent);padding-left:8px}
+</style>
+<div class="wrap">
+<header><h1>Placer Scout field plan</h1>
+<p class="lede">Driving, drone and walking plan for the 25 wash targets and the 50 ant-mound clip spots. Each stop has a launch point on a public road, a drone shot list with exact start and stop points, what to check on foot, and warnings for private land, claims and old shafts.</p></header>
+
+<section class="box"><h2>Where to start</h2>
+<ol><li><b>Trip A (Nelson) first.</b> It is the closest, the walks are short, and it answers the two biggest open questions in one morning: are the ant "clearings" real, and is the #1 target a real gold trap?</li>
+<li><b>Trip B (Searchlight) next.</b> Ten targets, mostly right off the road. Several sit tight against private land and old shafts, so watch the red and amber warnings.</li>
+<li><b>Trip C (Goodsprings) last.</b> Longer, rougher walks. Skip #16 and #18 unless you're set up for a real hike.</li></ol>
+<p class="small">Bring the files from the chat: <b>field_plan.kml</b> (launch points, targets and wash flight lines for Google Earth or a GPS app), <b>clip_spots.gpx</b> and <b>targets.gpx</b>.</p></section>
+
+<section class="box"><h2>Data that raises confidence</h2>
+<p>Record these at every stop. They let me check the model against what's really on the ground and re-weight it.</p>
+<div class="sheet">
+<div><b>Waypoint and time</b><br>Where you stood, and when.</div>
+<div><b>Photo and video file names</b><br>Matched to the stop code (A1, B3…).</div>
+<div><b>Trap check</b><br>Is the junction, widening or slope break real? Yes, no or partly.</div>
+<div><b>Bedrock</b><br>Exposed in the channel? Depth if you probed.</div>
+<div><b>Gravel</b><br>Mostly sand, pea gravel, cobbles or boulders.</div>
+<div><b>Pans</b><br>Gold colors in each of 3 pans, plus black sand: none, some or lots.</div>
+<div><b>Flood signs</b><br>Debris line height, fresh scour, uprooted brush.</div>
+<div><b>Ant nests</b><br>Clip number or waypoint, disc size, ants active or not.</div>
+<div><b>Access</b><br>Road condition, gates, signs, claim posts you saw.</div></div>
+<p class="small">Zero colors is a useful result too: it tells me which signals to trust less.</p></section>
+
+<section class="box"><h2>Rules and safety</h2><ul>
+<li><b>Drone:</b> you need the FAA TRUST certificate. Stay under 400 ft and keep the drone in sight. Check B4UFLY before each trip.</li>
+<li><b>No-drone zones:</b> no flights in Lake Mead NRA (Park Service). Don't launch or land inside wilderness. Keep well clear of bighorn sheep and desert tortoises.</li>
+<li><b>Panning:</b> hand panning on open BLM land only. Never on an active claim or private land; claim posts and signs override this plan.</li>
+<li><b>Old mines:</b> never enter old shafts or tunnels. Stay off dump edges, and walk where you can see the ground.</li>
+<li><b>Mill waste:</b> old mill tailings can hold mercury and arsenic. Don't dig in them or breathe their dust, and wash your hands and gear.</li>
+<li><b>Weather:</b> no wash work if storms are possible anywhere upstream. Check the NWS Las Vegas forecast that morning.</li>
+<li><b>Heat:</b> go early. Bring plenty of water, and tell someone your route; many spots have no cell signal.</li></ul></section>
+<section class="trip" id="trip-A"><h2>Trip A · Nelson / Eldorado</h2><p class="why">Start here. Closest to Las Vegas, all stops are short walks, and it settles the ant-mound question while checking the #1 target.</p><p>From Henderson, take US-95 south toward Searchlight, then turn east on NV-165 (Nelson Road) toward Nelson. The stops sit along NV-165 and the dirt roads north and south of it, before the road drops into Eldorado Canyon. Lower Eldorado Canyon and the river are Lake Mead NRA: no drones there.</p><p class="toc"><a href="#A1">A1 Target #7</a> · <a href="#A2">A2 Target #22</a> · <a href="#A3">A3 Clip area</a> · <a href="#A4">A4 Target #1</a> · <a href="#A5">A5 Target #24</a></p><article class="stop" id="A1">
+<header><span class="code">A1</span><h3>Target #7</h3><span class="score">score 0.39</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>Hwy 165 (local road) · <span class="mono">35.70702, -114.82346</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.70718, -114.82329</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.707019%2C-114.823459&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.707176%2C-114.823287" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Private land 22 m away: stay on the BLM side</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.708657%2C-114.824398" target="_blank" rel="noopener noreferrer">35.70866, -114.82440</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.706435%2C-114.821991" target="_blank" rel="noopener noreferrer">35.70643, -114.82199</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="A2">
+<header><span class="code">A2</span><h3>Target #22</h3><span class="score">score 0.21</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.68228, -114.79848</span></span></div>
+<div><span class="k">Walk</span><span>346 m (1,135 ft) walk, 17 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.68005, -114.80116</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.682279%2C-114.798482&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.680046%2C-114.801157" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.680046%2C-114.80338" target="_blank" rel="noopener noreferrer">35.68005, -114.80338</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.679861%2C-114.799583" target="_blank" rel="noopener noreferrer">35.67986, -114.79958</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (widening) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="A3">
+<header><span class="code">A3</span><h3>Ant mound clip area (50 spots)</h3></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.69744, -114.86704</span></span></div>
+<div><span class="k">Walk</span><span>685 m (2,247 ft) walk, 75 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.69149, -114.86502</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.697441%2C-114.86704&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.69149364%2C-114.86501646" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone: one photo per spot</h4><ol>
+<li>Load <b>clip_spots.gpx</b> (50 waypoints) into your phone or flight app.</li>
+<li>At each spot, hover about <b>35 m</b> up and take one <b>straight-down</b> photo. Name or note it by clip number.</li>
+<li>For any spot that shows a round bare patch, drop to <b>15 m</b> and take two more straight-down photos.</li></ol>
+<p class="small">The spots spread over about 1.2 × 1.5 km, so work them in a loop and expect 2–3 batteries.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to any spot that looks like a clearing. A harvester-ant nest has a bare disc, a central hole and ant traffic. Look, don't dig: these ants sting. Run a magnet or detector over the cleared surface and the tailings ring around the hole.</p></div></article><article class="stop" id="A4">
+<header><span class="code">A4</span><h3>Target #1</h3><span class="score">score 0.45</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.67412, -114.86952</span></span></div>
+<div><span class="k">Walk</span><span>185 m (607 ft) walk, 17 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.67347, -114.86764</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.674123%2C-114.869525&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.673472%2C-114.867639" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag danger">1 mapped shafts/adits within 300 m (nearest 252 m)</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.674028%2C-114.865694" target="_blank" rel="noopener noreferrer">35.67403, -114.86569</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.672639%2C-114.86875" target="_blank" rel="noopener noreferrer">35.67264, -114.86875</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is 8 m (26 ft) above the launch point. The drone&#x27;s altitude reads from launch, so add that to get height above the wash.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="A5">
+<header><span class="code">A5</span><h3>Target #24</h3><span class="score">score 0.19</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.72408, -114.87234</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.72403, -114.87245</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.724082%2C-114.872344&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.724028%2C-114.872454" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.722361%2C-114.872454" target="_blank" rel="noopener noreferrer">35.72236, -114.87245</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.724954%2C-114.873472" target="_blank" rel="noopener noreferrer">35.72495, -114.87347</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article></section><section class="trip" id="trip-B"><h2>Trip B · Searchlight</h2><p class="why">Most targets in one place, nearly all easy walks. Several sit right against private land and old shafts, so read each card&#x27;s warnings.</p><p>Take US-95 south from Henderson to Searchlight. The targets are on the edge of town and along Cottonwood Cove Road east of US-95. Avi Kwa Ame National Monument surrounds this area: stay on the targets listed, which are outside it.</p><p class="toc"><a href="#B1">B1 Target #6</a> · <a href="#B2">B2 Target #2</a> · <a href="#B3">B3 Target #25</a> · <a href="#B4">B4 Target #3</a> · <a href="#B5">B5 Target #4</a> · <a href="#B6">B6 Target #8</a> · <a href="#B7">B7 Target #14</a> · <a href="#B8">B8 Target #23</a> · <a href="#B9">B9 Target #13</a> · <a href="#B10">B10 Target #17</a></p><article class="stop" id="B1">
+<header><span class="code">B1</span><h3>Target #6</h3><span class="score">score 0.40</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>US Hwy 95 (highway) · <span class="mono">35.48213, -114.92307</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.48208, -114.92264</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.482125%2C-114.923075&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.482083%2C-114.922639" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Private land 33 m away: stay on the BLM side</span><span class="flag danger">15 mapped shafts/adits within 300 m (nearest 77 m)</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.483843%2C-114.922639" target="_blank" rel="noopener noreferrer">35.48384, -114.92264</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.480787%2C-114.923102" target="_blank" rel="noopener noreferrer">35.48079, -114.92310</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B2">
+<header><span class="code">B2</span><h3>Target #2</h3><span class="score">score 0.44</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.47287, -114.93843</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.47292, -114.93866</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.472869%2C-114.938432&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.472917%2C-114.938657" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.474398%2C-114.937361" target="_blank" rel="noopener noreferrer">35.47440, -114.93736</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.47162%2C-114.939028" target="_blank" rel="noopener noreferrer">35.47162, -114.93903</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B3">
+<header><span class="code">B3</span><h3>Target #25</h3><span class="score">score 0.18</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.46467, -114.92776</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.46449, -114.92764</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.464669%2C-114.927755&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.464491%2C-114.927639" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Private land 1 m away: stay on the BLM side</span><span class="flag danger">5 mapped shafts/adits within 300 m (nearest 40 m)</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.465602%2C-114.926991" target="_blank" rel="noopener noreferrer">35.46560, -114.92699</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.46375%2C-114.928935" target="_blank" rel="noopener noreferrer">35.46375, -114.92893</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B4">
+<header><span class="code">B4</span><h3>Target #3</h3><span class="score">score 0.43</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.45185, -114.92993</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.45162, -114.93032</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.45185%2C-114.929926&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.45162%2C-114.930324" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Private land 54 m away: stay on the BLM side</span><span class="flag warn">Active mining claim 63 m away: don&#x27;t pan or dig on it</span><span class="flag danger">3 mapped shafts/adits within 300 m (nearest 149 m)</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.453287%2C-114.929769" target="_blank" rel="noopener noreferrer">35.45329, -114.92977</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.450509%2C-114.931157" target="_blank" rel="noopener noreferrer">35.45051, -114.93116</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (widening) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B5">
+<header><span class="code">B5</span><h3>Target #4</h3><span class="score">score 0.41</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.45694, -114.94755</span></span></div>
+<div><span class="k">Walk</span><span>390 m (1,280 ft) walk, 0 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.45384, -114.94551</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.456941%2C-114.947547&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.453843%2C-114.945509" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.455046%2C-114.947083" target="_blank" rel="noopener noreferrer">35.45505, -114.94708</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.452639%2C-114.944954" target="_blank" rel="noopener noreferrer">35.45264, -114.94495</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B6">
+<header><span class="code">B6</span><h3>Target #8</h3><span class="score">score 0.36</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.43660, -114.91723</span></span></div>
+<div><span class="k">Walk</span><span>247 m (810 ft) walk, 2 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.43718, -114.91986</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.436597%2C-114.917232&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.437176%2C-114.919861" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Avi Kwa Ame monument 222 m away: confirm its rules first</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.438843%2C-114.920231" target="_blank" rel="noopener noreferrer">35.43884, -114.92023</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.43588%2C-114.919491" target="_blank" rel="noopener noreferrer">35.43588, -114.91949</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B7">
+<header><span class="code">B7</span><h3>Target #14</h3><span class="score">score 0.29</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.42723, -114.91989</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.42727, -114.92005</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.427234%2C-114.919895&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.427269%2C-114.920046" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Avi Kwa Ame monument 214 m away: confirm its rules first</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.428935%2C-114.919491" target="_blank" rel="noopener noreferrer">35.42894, -114.91949</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.425972%2C-114.920417" target="_blank" rel="noopener noreferrer">35.42597, -114.92042</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B8">
+<header><span class="code">B8</span><h3>Target #23</h3><span class="score">score 0.19</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.44295, -114.89797</span></span></div>
+<div><span class="k">Walk</span><span>100 m (328 ft) walk, 1 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.44255, -114.89699</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.442951%2C-114.89797&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.442546%2C-114.896991" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.444213%2C-114.89625" target="_blank" rel="noopener noreferrer">35.44421, -114.89625</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.441343%2C-114.897546" target="_blank" rel="noopener noreferrer">35.44134, -114.89755</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B9">
+<header><span class="code">B9</span><h3>Target #13</h3><span class="score">score 0.30</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.47154, -114.86564</span></span></div>
+<div><span class="k">Walk</span><span>right at the road · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.47199, -114.86588</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.471535%2C-114.865639&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.471991%2C-114.86588" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Active mining claim 50 m away: don&#x27;t pan or dig on it</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.471157%2C-114.867639" target="_blank" rel="noopener noreferrer">35.47116, -114.86764</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.472546%2C-114.864491" target="_blank" rel="noopener noreferrer">35.47255, -114.86449</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="B10">
+<header><span class="code">B10</span><h3>Target #17</h3><span class="score">score 0.28</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>Cottonwood Cove Rd (local road) · <span class="mono">35.47391, -114.84668</span></span></div>
+<div><span class="k">Walk</span><span>90 m (295 ft) walk, 1 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.47310, -114.84681</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.473907%2C-114.84668&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.473102%2C-114.846806" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag danger">1 mapped shafts/adits within 300 m (nearest 200 m)</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.472917%2C-114.848935" target="_blank" rel="noopener noreferrer">35.47292, -114.84893</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.473102%2C-114.845139" target="_blank" rel="noopener noreferrer">35.47310, -114.84514</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article></section><section class="trip" id="trip-C"><h2>Trip C · Goodsprings</h2><p class="why">Longer walks and rougher ground. Do it after A and B, early in the day, with plenty of water.</p><p>Take I-15 south to Jean, then NV-161 west to Goodsprings. Most targets are on dirt roads in the hills west and north of town. Some need a high-clearance vehicle; #16 and #18 are long hikes.</p><p class="toc"><a href="#C1">C1 Target #9</a> · <a href="#C2">C2 Target #15</a> · <a href="#C3">C3 Target #16</a> · <a href="#C4">C4 Target #21</a> · <a href="#C5">C5 Target #10</a> · <a href="#C6">C6 Target #18</a> · <a href="#C7">C7 Target #19</a> · <a href="#C8">C8 Target #20</a> · <a href="#C9">C9 Target #12</a> · <a href="#C10">C10 Target #5</a></p><article class="stop" id="C1">
+<header><span class="code">C1</span><h3>Target #9</h3><span class="score">score 0.35</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.82300, -115.43482</span></span></div>
+<div><span class="k">Walk</span><span>106 m (348 ft) walk, 2 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.82282, -115.43597</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.823001%2C-115.434815&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.822824%2C-115.435972" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.822731%2C-115.438102" target="_blank" rel="noopener noreferrer">35.82273, -115.43810</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.822454%2C-115.434398" target="_blank" rel="noopener noreferrer">35.82245, -115.43440</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C2">
+<header><span class="code">C2</span><h3>Target #15</h3><span class="score">score 0.29</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.81654, -115.44632</span></span></div>
+<div><span class="k">Walk</span><span>92 m (302 ft) walk, 0 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.81727, -115.44681</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.816537%2C-115.446317&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.817269%2C-115.446806" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.816157%2C-115.44838" target="_blank" rel="noopener noreferrer">35.81616, -115.44838</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.817639%2C-115.445417" target="_blank" rel="noopener noreferrer">35.81764, -115.44542</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C3">
+<header><span class="code">C3</span><h3>Target #16</h3><span class="score">score 0.28</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.79520, -115.41220</span></span></div>
+<div><span class="k">Walk</span><span>1,074 m (3,524 ft) walk, 114 m climb · <b class="rate hard">hard</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.79264, -115.42366</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.795204%2C-115.412197&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.792639%2C-115.423657" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.792639%2C-115.425694" target="_blank" rel="noopener noreferrer">35.79264, -115.42569</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.791713%2C-115.422546" target="_blank" rel="noopener noreferrer">35.79171, -115.42255</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is 28 m (92 ft) above the launch point. The drone&#x27;s altitude reads from launch, so add that to get height above the wash.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C4">
+<header><span class="code">C4</span><h3>Target #21</h3><span class="score">score 0.27</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.80541, -115.48566</span></span></div>
+<div><span class="k">Walk</span><span>820 m (2,690 ft) walk, 2 m climb · <b class="rate hard">hard</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.80829, -115.49403</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.805409%2C-115.485665&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.808287%2C-115.494028" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag warn">Active mining claim 82 m away: don&#x27;t pan or dig on it</span><span class="flag danger">2 mapped shafts/adits within 300 m (nearest 245 m)</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.809028%2C-115.492361" target="_blank" rel="noopener noreferrer">35.80903, -115.49236</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.807176%2C-115.494398" target="_blank" rel="noopener noreferrer">35.80718, -115.49440</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is 303 m (994 ft) below the launch point. The drone&#x27;s altitude reads from launch, so subtract that to get height above the wash.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C5">
+<header><span class="code">C5</span><h3>Target #10</h3><span class="score">score 0.33</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.77729, -115.51015</span></span></div>
+<div><span class="k">Walk</span><span>164 m (538 ft) walk, 2 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.77607, -115.51116</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.777291%2C-115.510151&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.776065%2C-115.511157" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.774954%2C-115.509583" target="_blank" rel="noopener noreferrer">35.77495, -115.50958</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.776713%2C-115.512454" target="_blank" rel="noopener noreferrer">35.77671, -115.51245</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C6">
+<header><span class="code">C6</span><h3>Target #18</h3><span class="score">score 0.28</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.70509, -115.48900</span></span></div>
+<div><span class="k">Walk</span><span>3,147 m (10,325 ft) walk, 537 m climb · <b class="rate hard">hard</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.73005, -115.47245</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.705094%2C-115.489&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.730046%2C-115.472454" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.72875%2C-115.47338" target="_blank" rel="noopener noreferrer">35.72875, -115.47338</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.730417%2C-115.470972" target="_blank" rel="noopener noreferrer">35.73042, -115.47097</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is 211 m (692 ft) above the launch point. The drone&#x27;s altitude reads from launch, so add that to get height above the wash.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C7">
+<header><span class="code">C7</span><h3>Target #19</h3><span class="score">score 0.27</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (4WD / dirt track) · <span class="mono">35.72913, -115.42300</span></span></div>
+<div><span class="k">Walk</span><span>1,106 m (3,629 ft) walk, 51 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.73153, -115.43486</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.729127%2C-115.422995&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.731528%2C-115.434861" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+<div class="flags"><span class="flag info">Last stretch is a 4WD / dirt track</span></div>
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.731806%2C-115.436991" target="_blank" rel="noopener noreferrer">35.73181, -115.43699</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.73125%2C-115.433287" target="_blank" rel="noopener noreferrer">35.73125, -115.43329</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (widening) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is 50 m (164 ft) above the launch point. The drone&#x27;s altitude reads from launch, so add that to get height above the wash.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C8">
+<header><span class="code">C8</span><h3>Target #20</h3><span class="score">score 0.27</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.85746, -115.47596</span></span></div>
+<div><span class="k">Walk</span><span>133 m (436 ft) walk, 1 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.85866, -115.47588</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.857456%2C-115.475964&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.858657%2C-115.47588" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.858565%2C-115.478102" target="_blank" rel="noopener noreferrer">35.85856, -115.47810</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.859028%2C-115.474306" target="_blank" rel="noopener noreferrer">35.85903, -115.47431</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C9">
+<header><span class="code">C9</span><h3>Target #12</h3><span class="score">score 0.31</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>Rainbow Quarry Rd (local road) · <span class="mono">35.86774, -115.45454</span></span></div>
+<div><span class="k">Walk</span><span>373 m (1,224 ft) walk, 3 m climb · <b class="rate easy">easy</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.86671, -115.45847</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.867737%2C-115.454535&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.866713%2C-115.458472" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.868287%2C-115.459213" target="_blank" rel="noopener noreferrer">35.86829, -115.45921</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.86588%2C-115.457269" target="_blank" rel="noopener noreferrer">35.86588, -115.45727</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article><article class="stop" id="C10">
+<header><span class="code">C10</span><h3>Target #5</h3><span class="score">score 0.40</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>unnamed road (local road) · <span class="mono">35.80372, -115.57539</span></span></div>
+<div><span class="k">Walk</span><span>471 m (1,545 ft) walk, 15 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">35.80764, -115.57338</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=35.80372%2C-115.57539&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=35.807639%2C-115.57338" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=35.809213%2C-115.572269" target="_blank" rel="noopener noreferrer">35.80921, -115.57227</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=35.806713%2C-115.574583" target="_blank" rel="noopener noreferrer">35.80671, -115.57458</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is 14 m (46 ft) above the launch point. The drone&#x27;s altitude reads from launch, so add that to get height above the wash.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article></section><section class="trip" id="trip-D"><h2>Trip D · Other</h2><p class="why">One target at the south edge of the Las Vegas valley, near Blue Diamond.</p><p>Off S Fort Apache Rd at the south edge of the valley.</p><p class="toc"><a href="#D1">D1 Target #11</a></p><article class="stop" id="D1">
+<header><span class="code">D1</span><h3>Target #11</h3><span class="score">score 0.32</span></header>
+<div class="facts"><div><span class="k">Launch</span><span>S Fort Apache Rd (local road) · <span class="mono">36.04471, -115.29720</span></span></div>
+<div><span class="k">Walk</span><span>232 m (761 ft) walk, 6 m climb · <b class="rate moderate">moderate</b></span></div>
+<div><span class="k">Target</span><span class="mono">36.04458, -115.29977</span></div></div>
+<div class="links"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=36.044708%2C-115.297199&travelmode=driving" target="_blank" rel="noopener noreferrer">Navigate to launch</a><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=36.044583%2C-115.299769" target="_blank" rel="noopener noreferrer">Target on map</a></div>
+
+<div class="block"><h4>Drone shot list</h4><ol>
+<li><b>Overview.</b> Climb to about <b>60 m</b> over the target. Take one straight-down photo and one angled shot looking upstream.</li>
+<li><b>Wash video.</b> Start upstream at <a href="https://www.google.com/maps/search/?api=1&query=36.043194%2C-115.301065" target="_blank" rel="noopener noreferrer">36.04319, -115.30106</a> and fly down the wash to <a href="https://www.google.com/maps/search/?api=1&query=36.044861%2C-115.298194" target="_blank" rel="noopener noreferrer">36.04486, -115.29819</a> (about 350 m). Stay about <b>25 m</b> over the wash, camera 45–60° down, 2–3 m/s. Then fly the same line back at 40 m, camera straight down, a photo every 2 seconds.</li>
+<li><b>Close-ups.</b> Hover <b>12–15 m</b> over the target (junction) and take straight-down photos of the junction or bar, plus any rock ribs crossing the channel and dark black-sand streaks.</li></ol>
+<p class="small">The target is about level with the launch point.</p></div>
+<div class="block"><h4>On foot</h4><p>Walk to the target only after the flight, and stay on BLM ground. Look for:</p><ul>
+<li>bedrock showing in the channel floor;</li>
+<li>coarse gravel on the inside of the bend just below the junction;</li>
+<li>a debris line from the last flood.</li></ul>
+<p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div></article></section>
+<p class="small">Launch points are the nearest public road to each target, chosen off Park Service land, private land and wilderness. Walks and climbs come from 10 m elevation data, and wash lines from the 10 m flow model, so expect small offsets on the ground. Land status comes from BLM maps; check the claim link in targets.csv before you go.</p>
+</div>
