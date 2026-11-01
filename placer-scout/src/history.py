@@ -29,6 +29,18 @@ pts = gpd.GeoDataFrame(geometry=gpd.points_from_xy(df.lon, df.lat), crs=4326)
 inside = pts.within(sec.geometry.iloc[0]).values
 df.loc[inside, "f_hist"] = 1.0
 df.loc[inside, "hist_basis"] = "Inside T26S R64E Sec 4, the Gresh placer claims (USGS Bull. 1356, p. 7; USBM IC 6964)"
+# 1942 shutdown (WPB Order L-208): +0.1 when the strongest upstream gold source is within 300 m of a strong/medium L-208 candidate
+L208 = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "out", "l208_mines.csv")).dropna(subset=["lat"])
+L208 = L208[L208.l208_class.str.contains(r"L-208 candidate \((strong|medium)\)", regex=True)]
+srcs = gpd.read_file(os.path.join(DATA, "gold_sources.geojson"))[["src_id", "geometry"]].drop_duplicates("src_id").to_crs(26911)
+lg = gpd.GeoDataFrame(L208[["name"]], geometry=gpd.points_from_xy(L208.lon, L208.lat), crs=4326).to_crs(26911)
+js = gpd.sjoin_nearest(srcs, lg, how="left", max_distance=300, distance_col="d"); js = js[~js.index.duplicated()]
+l208_src = dict(zip(js.src_id.astype(str), js.name))
+df["l208_upstream"] = df.top_source_id.astype(str).map(l208_src)
+hit = df.l208_upstream.notna()
+df.loc[hit, "f_hist"] = np.minimum(1.0, df.loc[hit, "f_hist"] + 0.1)
+df.loc[hit, "hist_basis"] = df.loc[hit, "hist_basis"] + "; + 1942 shutdown mine upstream (" + df.loc[hit, "l208_upstream"] + ", out/l208_mines.csv)"
+print("L-208 boosted cells:", int(hit.sum()), df.loc[hit, "l208_upstream"].value_counts().to_dict())
 df["score"] = df.f_source * df.f_flood * df.f_trap * df.f_hist
 df.to_csv(p, index=False)
 print("f_hist counts:", df.f_hist.value_counts().to_dict(), "| cells in Gresh section:", int(inside.sum()), "legal:", int((inside & df.legal_ok).sum()))

@@ -8,7 +8,7 @@ CLAIMS = "https://nlsdbpubgis.blm.gov/arcgis/rest/services/Mining_Claims/MiningC
 PLSS = "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/3/query"
 
 df = pd.read_csv(os.path.join(DATA, "scored_cells.csv.gz"), dtype={"top_source_id": str, "noaa_flood_event_id": str})
-legal = df[df.legal_ok].sort_values("score", ascending=False).reset_index(drop=True)
+legal = df[df.legal_ok & df.get("ground_ok", pd.Series(True, index=df.index)).fillna(True).astype(bool)].sort_values("score", ascending=False).reset_index(drop=True)
 pts = gpd.GeoDataFrame(legal, geometry=gpd.points_from_xy(legal.lon, legal.lat), crs=4326).to_crs(26911)
 rej_path = os.path.join(DATA, "lidar_rejected.csv")        # spots whose 10 m trap was not confirmed by 1 m lidar (see lidar.py)
 if os.path.exists(rej_path):
@@ -61,7 +61,7 @@ t["mlrs_active_claims_check"] = [claim_url(1, a, b) for a, b in zip(t.lon, t.lat
 t["mlrs_research_map"] = "https://mlrs.blm.gov/s/research-map"
 t.insert(0, "rank", range(1, len(t) + 1))
 t["lat"] = t.lat.round(6); t["lon"] = t.lon.round(6)
-cols = ["rank", "lat", "lon", "district", "score", "f_source", "f_flood", "f_trap", "f_hist", "hist_basis", "land_status", "acec_flag", "nearest_road", "nearest_road_m",
+cols = ["rank", "lat", "lon", "district", "score", "f_source", "f_flood", "f_trap", "f_hist", "hist_basis", "l208_upstream", "land_status", "acec_flag", "nearest_road", "nearest_road_m",
         "plss", "mlrs_active_claims_check", "mlrs_research_map", "source_basis", "top_source_name", "top_source_dataset", "top_source_id",
         "top_source_kind", "top_source_dist_m", "top_source_url", "altered_frac_upstream", "trap_type", "trap_slope_break", "trap_junction",
         "trap_widening", "grad_up", "grad_down", "floor_width_m", "floor_width_up_m", "drain_km2", "elev_m", "storm_max_24h_mm", "rain_basis",

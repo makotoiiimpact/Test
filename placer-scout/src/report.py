@@ -106,10 +106,28 @@ L.append("- **Never enter old mine shafts or tunnels.** They can collapse, have 
 L.append("- **Never work in a wash when storms are possible.** Flash floods can come from rain miles away, even when the sky above you is clear. Check the forecast and leave if clouds build.")
 L.append("- **Treat old mill waste as dangerous.** Old mills often used mercury to catch gold, and the waste can still hold mercury and arsenic. Do not dig in it, do not breathe its dust, and wash your hands and gear.")
 L.append("- Bring plenty of water, tell someone where you are going, and watch for rattlesnakes. Many places have no cell signal.\n")
+# ---------- Phase 2 and old-records section (computed from files) ----------
+import json as _json
+_l = pd.read_csv(os.path.join(OUT, "l208_mines.csv"))
+_cand = _l[_l.l208_class.str.contains(r"candidate \((?:strong|medium)\)|Stopped at L-208", regex=True, na=False)]
+_lab = _json.load(open(os.path.join(OUT, "review", "labels.json")))["labels"]
+_cnt = {k: sum(1 for x in _lab if x["answer"] == k) for k in ("yes", "no", "unsure")}
+_cells = pd.read_csv(os.path.join(OUT, "..", "data", "scored_cells.csv.gz"), usecols=["legal_ok", "ground_ok", "ground_reason"], low_memory=False)
+_g = _cells[_cells.legal_ok & ~_cells.ground_ok.fillna(True).astype(bool)].ground_reason.value_counts().to_dict()
+L.append("## Old records and the 1942 shutdown\n")
+L.append(f"In 1942 the government ordered most gold mines to stop (War Production Board Order L-208). Old Bureau of Mines yearbooks from 1939 to 1947 were searched for every mine in these districts. {len(_l)} mines are listed in `l208_mines.csv`, each fact with a page number. The ones that look like they were stopped by the order:\n")
+for r in _cand.itertuples():
+    L.append(f"- **{r.name}** ({r.district}): {r.l208_class}. {r.stop_note if isinstance(r.stop_note, str) else ''} Land: {str(r.land_status).split(' (')[0].lower()}.")
+L.append("\nMost of these mine sites are private land, so they cannot be visited. But the washes below them can be on public land. A wash gets a small boost (+0.1 on placer history) when its strongest upstream gold source is one of these mines.\n")
+L.append("Two more old reports were used. A 1973 USGS report (Bulletin 1356, *Placer Gold Deposits of Nevada*) says Eldorado Canyon's recent placer gold came mostly from the Gresh claims in T26S R64E Sec 4, and lists no placer gold for Goodsprings. A 1937 Bureau of Mines survey (Information Circular 6964) names C. E. L. Gresh as president of the Eldorado Empire Mining Co. Notes: `notes/usgs_b1356_placers.md`.\n")
+L.append("## Ground the old maps ruled out\n")
+L.append("The 1950s USGS maps showed some top spots sat in a town, quarries, or a pipeline corridor. Spots like that are now removed everywhere: inside a town with streets nearby, near a mapped quarry or pit, within 150 m of a mapped gas pipeline (never dig over a buried pipeline), or within 60 m of a power line. " + ", ".join(f"{v} {k}" for k, v in _g.items()) + " legal spots were removed this way. Pipeline maps are approximate, so watch for pipeline markers in the field.\n")
+L.append("## The ant-mound test (stopped)\n")
+L.append(f"Harvester ants bring up small heavy grains, so their mounds can show gold from below. Fifty spots from 0.6 m aerial photos were checked by eye: {_cnt['yes']} yes, {_cnt['no']} no, {_cnt['unsure']} not sure. The plan was to stop if fewer than 5 of 50 were real mounds, so the test stopped. The photos are too coarse, and the local ants make small mounds without a cleared ring.\n")
 L.append("## Where the data came from\n")
 L.append("BLM mining claims and land status (gis.blm.gov, nlsdbpubgis.blm.gov); USGS mine records (MRDS) and old topographic map mine features (USMIN, mrdata.usgs.gov); "
          "USGS 3DEP elevation, 10 m and 1 m lidar (prd-tnm.s3.amazonaws.com); Sentinel-2 satellite images (Earth Search, AWS); "
          "NOAA MRMS weather radar (noaa-mrms-pds on AWS); NOAA Storm Events (ncei.noaa.gov); Clark County Regional Flood Control District rain gauges (gustfront.ccrfcd.org); "
-         "Census TIGER roads. Every download is listed with its address, date, and file check code in `data/PROVENANCE.csv`.\n")
+         "Census TIGER roads and town boundaries; HIFLD power lines; EIA/HIFLD gas pipelines; USGS Bulletin 1356; USBM IC 6964 and Minerals Yearbooks 1939–1947 (archive.org). Every download is listed with its address, date, and file check code in `data/PROVENANCE.csv`.\n")
 open(os.path.join(OUT, "REPORT.md"), "w").write("\n".join(L))
 print("\n".join(L)[:6000])
