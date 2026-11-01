@@ -194,4 +194,5 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
       New #2 = Eldorado Canyon main wash below Nelson (1950s map: strong). New #5 = Nelson landing strip (weak).
       Best bets now #2, #3, #6. Old-map crops now named by location; `out/oldmap_review.csv` keyed by lat/lon.
 - [x] REPORT.md: placer-history factor, Old records and 1942 shutdown, ground exclusions, ant-mound stop (computed from files).
-- [ ] Verifier pass on REPORT.md (running).
+- [x] Verifier pass on REPORT.md: 1 major (score lines missed placer history) + ~12 minor defects, all fixed in src/report.py;
+      PROVENANCE.csv gained 10 rows (yearbooks 1939-41, Bull. 1356, IC 6964, Callaghan, Hewett, TIGER places, Gresh section).
