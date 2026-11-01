@@ -175,3 +175,8 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
 - [x] Top 8 read by eye on the 1950s 15' sheets (`src/oldmap_crops.py`, `out/oldmap_review.csv`): strong #5, #6; fair #2, #8;
       weak #1 (Nelson townsite on highway), #3 (quarries, power line), #4 (pipeline corridor), #7 (open slope). Map-named
       mines (Pittsburg, Iron Gold, Lavina, Boss, …) were already in the gold sources. Field plan updated with each map crop.
+- [x] USGS Bulletin 1356 (Johnson 1973, placer gold of Nevada) read for Clark County (`out/notes/usgs_b1356_placers.md`):
+      the Gresh placer claims are in T26S R64E Sec 04 = target #23's section (and next to #1). Goodsprings has no recorded
+      placer production (11 of top 25 are there). Searchlight placers lie east, in ground now excluded. Not yet used in scoring.
+- [ ] Blocked or login-only: NBMG Bulletin 30 (Vanderburg 1936, Placer mining in Nevada) and Bulletin 62 (Clark County),
+      HathiTrust, UNLV Special Collections, USGS EarthExplorer 1950s aerial photos (free account). Owner can upload PDFs.
