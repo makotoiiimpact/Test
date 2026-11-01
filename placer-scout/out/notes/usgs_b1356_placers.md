@@ -13,3 +13,16 @@ Source: https://pubs.usgs.gov/bul/1356/report.pdf (63 pages, scanned). Pages cit
 - **Independent check, Eldorado:** #23 (Black Hawk) is in T26S R64E Sec 04, the Gresh placer section; #1 (Eldorado Empire) is in Sec 03 next door. Placer records were not a model input, so the model reached the one documented placer section on its own. The Gresh claims may still be claimed or patented, so re-check BLM MLRS before going.
 - **Goodsprings caution:** 11 of the top 25 are in a district with no recorded placer gold. Its mines were mainly lead and zinc. Treat Goodsprings targets as lower confidence than their scores.
 - **Searchlight:** the recorded placers lie east of our targets, in old river gravels toward the Colorado. Most of that ground is now Avi Kwa Ame National Monument or Lake Mead NRA, which the model excludes.
+
+## Follow-up: USBM Information Circular 6964 (Vanderburg, 1937), free on archive.org
+Source: https://archive.org/details/pub_usgov-bmines-information-circular_6964 (OCR text; spelling below corrected from the scan).
+- "The Eldorado Empire Mining Co., C. E. L. Gresh, of Nelson, Nev., president and principal owner, controls the Empire group of
+  three claims (one patented) adjoining the Wall Street group on the east." Inactive in February 1937; about 50 tons of ore on
+  the dumps "reported to average about $12 per ton in gold and silver."
+- Eldorado Empire Mining Co. is the top gold source above target #1. The 1973 report's "Gresh Group" placer claims in
+  T26S R64E Sec 04 carry the same family name. Likely connected, but the documents do not say they are the same claims.
+- Wall Street, the neighbor to the west, is the L-208 "medium" candidate (stopped June 18, 1943; out/l208_mines.csv).
+- Table 1 (Clark County production 1908–1935) shows placer gold only as footnotes: $98, $2,317, $1,035 and one illegible value.
+  Placer gold was a very small part of county gold output.
+- NBMG Bulletin 30 (Vanderburg 1936, Placer Mining in Nevada) costs $15 from NBMG and was not bought; this circular and
+  Bulletin 1356 cover most of what we need.
