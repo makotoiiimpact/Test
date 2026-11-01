@@ -1,5 +1,10 @@
 # USGS Bulletin 1356 (Johnson, 1973), "Placer gold deposits of Nevada": Clark County check (Nov 1, 2026)
 
+> **Status after the ground re-rank (later on Nov 1, 2026):** target numbers below are from the earlier ranking. Since then the
+> Nelson townsite cells were removed (`src/ground.py`), so old #1 and Black Hawk (#23, the Gresh section) are gone. The Eldorado
+> Empire mine now feeds target #5; the new #2 is the main Eldorado Canyon wash just downstream of the Gresh section. Goodsprings
+> holds 10 of the top 25. Current numbers are in `out/targets.csv`.
+
 Source: https://pubs.usgs.gov/bul/1356/report.pdf (63 pages, scanned). Pages cited are the printed page numbers.
 
 ## What it says (quotes are from the report)
