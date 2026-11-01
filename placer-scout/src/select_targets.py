@@ -61,7 +61,7 @@ t["mlrs_active_claims_check"] = [claim_url(1, a, b) for a, b in zip(t.lon, t.lat
 t["mlrs_research_map"] = "https://mlrs.blm.gov/s/research-map"
 t.insert(0, "rank", range(1, len(t) + 1))
 t["lat"] = t.lat.round(6); t["lon"] = t.lon.round(6)
-cols = ["rank", "lat", "lon", "district", "score", "f_source", "f_flood", "f_trap", "land_status", "acec_flag", "nearest_road", "nearest_road_m",
+cols = ["rank", "lat", "lon", "district", "score", "f_source", "f_flood", "f_trap", "f_hist", "hist_basis", "land_status", "acec_flag", "nearest_road", "nearest_road_m",
         "plss", "mlrs_active_claims_check", "mlrs_research_map", "source_basis", "top_source_name", "top_source_dataset", "top_source_id",
         "top_source_kind", "top_source_dist_m", "top_source_url", "altered_frac_upstream", "trap_type", "trap_slope_break", "trap_junction",
         "trap_widening", "grad_up", "grad_down", "floor_width_m", "floor_width_up_m", "drain_km2", "elev_m", "storm_max_24h_mm", "rain_basis",
@@ -69,7 +69,7 @@ cols = ["rank", "lat", "lon", "district", "score", "f_source", "f_flood", "f_tra
         "noaa_flood_date", "noaa_flood_dist_m", "flood_since", "gauge_effective_mm", "recent_max24h_mm", "recent_max24h_date", "recent_total_mm",
         "baseline_total_mm", "recent_vs_normal", "fresh_storm_bonus", "road_m", "trap_road_penalty", "nearest_recorded_gold_upstream_m",
         "influence_recorded_gold", "influence_topo_pits", "pits_capped", "closed_claim_case", "nearest_named_mine", "nearest_named_mine_m", "at_named_mine", "window"]
-for c in ("score", "f_source", "f_flood", "f_trap", "altered_frac_upstream", "trap_slope_break", "trap_junction", "trap_widening", "grad_up", "grad_down",
+for c in ("score", "f_source", "f_flood", "f_trap", "f_hist", "altered_frac_upstream", "trap_slope_break", "trap_junction", "trap_widening", "grad_up", "grad_down",
           "storm_max_24h_mm", "radar_max24h_mm", "gauge_max_day_mm", "drain_km2", "gauge_effective_mm", "recent_max24h_mm",
           "recent_total_mm", "baseline_total_mm", "influence_recorded_gold", "influence_topo_pits", "nearest_recorded_gold_upstream_m"):
     t[c] = t[c].astype(float).round(3)

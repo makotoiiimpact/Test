@@ -6,6 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 python3 src/hydro.py                       # drainage network (both windows)
 python3 src/score.py                       # score every wash cell
+python3 src/history.py                     # old-report placer-history factor (re-scores)
 rm -f data/lidar_rejected.csv
 for i in 1 2 3 4 5 6; do                   # pick top 25, check traps with 1 m lidar, replace rejected spots
   python3 src/select_targets.py

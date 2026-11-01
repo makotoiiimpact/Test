@@ -11,7 +11,7 @@ t["f_trap_lidar"] = np.where(t.lidar_confirms_trap == "no", np.maximum(fallback,
 # a trap halved for sitting by a road gets its full value back when 1 m lidar confirms it is a real channel feature
 t["f_trap_lidar"] = np.where((t.lidar_confirms_trap == "yes") & t.trap_road_penalty.astype(bool), np.minimum(1.0, t.f_trap * 2), t.f_trap_lidar).round(3)
 t["score_10m"] = t.score
-t["score"] = (t.f_source * t.f_flood * t.f_trap_lidar).round(3)
+t["score"] = (t.f_source * t.f_flood * t.f_trap_lidar * t.f_hist).round(3)
 t = t.sort_values(["score", "score_10m"], ascending=False).reset_index(drop=True); t["rank"] = range(1, len(t) + 1)
 import glob, geopandas as gpd
 DATA = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -29,7 +29,7 @@ for name, f in layers:
     best_d[better] = d[better]; best_n[better] = name
 t["nearest_exclusion"] = best_n; t["nearest_exclusion_m"] = np.round(best_d, 0)
 t["boundary_risk"] = np.where(best_d < 100, "YES: within 100 m, check on the ground", "")
-first = ["rank", "rank_10m", "lat", "lon", "district", "score", "score_10m", "f_source", "f_flood", "f_trap", "f_trap_lidar", "land_status", "nearest_exclusion", "nearest_exclusion_m", "boundary_risk", "acec_flag",
+first = ["rank", "rank_10m", "lat", "lon", "district", "score", "score_10m", "f_source", "f_flood", "f_trap", "f_trap_lidar", "f_hist", "hist_basis", "land_status", "nearest_exclusion", "nearest_exclusion_m", "boundary_risk", "acec_flag",
          "nearest_road", "nearest_road_m", "plss", "mlrs_active_claims_check", "mlrs_research_map"]
 t = t[first + [c for c in t.columns if c not in first]]
 t.to_csv(os.path.join(OUT, "targets.csv"), index=False)

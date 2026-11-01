@@ -103,12 +103,12 @@ fg = folium.FeatureGroup(name="Top 600 scored wash spots (legal only)", show=Fal
 cmap = cm.YlOrRd
 for _, r in cand.iterrows():
     folium.CircleMarker([r.lat, r.lon], radius=3, weight=0, fill=True, fill_opacity=0.8, fill_color=colors.to_hex(cmap(min(1, r.score / cand.score.max()))),
-                        tooltip=f"score {r.score:.3f} = source {r.f_source:.2f} x flood {r.f_flood:.2f} x trap {r.f_trap:.2f}").add_to(fg)
+                        tooltip=f"score {r.score:.3f} = source {r.f_source:.2f} x flood {r.f_flood:.2f} x trap {r.f_trap:.2f} x history {r.f_hist:.2f}").add_to(fg)
 fg.add_to(m)
 fg = folium.FeatureGroup(name="TOP 25 TARGETS", show=True)
 for _, r in t.iterrows():
     pop = f"""<b>#{r['rank']} — {html.escape(r.district)}</b><br>{r.lat}, {r.lon}<br>
-<b>Score {float(r.score):.3f}</b> = gold source {float(r.f_source):.2f} × flood {float(r.f_flood):.2f} × trap {float(r.f_trap):.2f}<br>
+<b>Score {float(r.score):.3f}</b> = gold source {float(r.f_source):.2f} × flood {float(r.f_flood):.2f} × trap {float(r.f_trap):.2f} × placer history {float(r.f_hist):.2f}<br>
 Source: {html.escape(str(r.top_source_name))} ({html.escape(str(r.top_source_dataset))} {html.escape(str(r.top_source_id))}), {float(r.top_source_dist_m):.0f} m upstream<br>
 Trap: {html.escape(r.trap_type)} · Storm: {float(r.storm_max_24h_mm):.0f} mm in 24 h ({html.escape(r.rain_basis)})<br>
 Land: {html.escape(r.land_status)} {('· ACEC: ' + html.escape(r.acec_flag)) if isinstance(r.acec_flag, str) and r.acec_flag != 'nan' else ''}<br>
