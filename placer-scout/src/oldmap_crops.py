@@ -12,6 +12,7 @@ for off in (0, 200):
 BBOX = {i["downloadURL"]: i["boundingBox"] for i in cat}
 sheets = maps[(maps.scale == "1:62500") & maps.year.between(1950, 1960)].copy()
 t = pd.read_csv(os.path.join(ROOT, "out", "targets.csv")).head(8)
+if len(sys.argv) > 1: t = t[t["rank"].isin([int(a) for a in sys.argv[1:]])]   # only these ranks
 DPI, HALF_M = 400, 1500
 for _, r in t.iterrows():
     cand = [(row, BBOX[row.url]) for row in sheets.itertuples() if row.url in BBOX and BBOX[row.url]["minX"] <= r.lon <= BBOX[row.url]["maxX"] and BBOX[row.url]["minY"] <= r.lat <= BBOX[row.url]["maxY"]]
@@ -29,7 +30,7 @@ for _, r in t.iterrows():
     m_per_pt = (bb["maxY"] - bb["minY"]) * 111000 / (P[2, 1] - P[0, 1])
     hpt = HALF_M / m_per_pt; sc = DPI / 72
     x0 = int((xp - hpt - float(cb.left)) * sc); y0 = int((float(cb.top) - yp - hpt) * sc); w = int(2 * hpt * sc)
-    out = os.path.join(O, f"target_{r['rank']}_{row.map_name.replace(' ', '_')}_{row.year}")
+    out = os.path.join(O, f"target_{r.lat:.4f}_{r.lon:.4f}_{row.map_name.replace(' ', '_')}_{row.year}")   # named by location, not rank
     subprocess.run(["pdftoppm", "-r", str(DPI), "-png", "-singlefile", "-x", str(max(0, x0)), "-y", str(max(0, y0)), "-W", str(w), "-H", str(w), fn, out], check=True)
     im = Image.open(out + ".png").convert("RGB"); d = ImageDraw.Draw(im); c = w / 2
     d.ellipse([c - 18, c - 18, c + 18, c + 18], outline=(255, 0, 0), width=4)

@@ -183,3 +183,15 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
       Lidar rejected 13 spots in 3 rounds. Old-map verdicts re-keyed by location; field plan best bets now #4 and #6.
 - [ ] Blocked or login-only: NBMG Bulletin 30 (Vanderburg 1936, Placer mining in Nevada) and Bulletin 62 (Clark County),
       HathiTrust, UNLV Special Collections, USGS EarthExplorer 1950s aerial photos (free account). Owner can upload PDFs.
+
+## Ground exclusions, 1942 boost, report Phase 2 (2026-11-01)
+- [x] `src/ground.py`: drop cells in a Census town with >= 500 m named streets within 300 m, within 150 m of a USMIN quarry/pit point
+      (100 m polygon), 150 m of an EIA/HIFLD gas pipeline, or 60 m of an HIFLD transmission line. Removed 125 of 1,106 legal cells.
+      Open slopes are not tested. OpenStreetMap (Overpass) was blocked; petroleum-product pipelines not found (layer missing).
+- [x] `src/history.py`: +0.1 f_hist when the top upstream source is within 300 m of a strong/medium L-208 mine (Jubilee, Wall Street:
+      32 cells). No top-25 target gets it.
+- [x] Re-rank: old #1 (Nelson townsite) and old #3 (Quartette, pipeline) dropped; Black Hawk (Gresh section) dropped as townsite.
+      New #2 = Eldorado Canyon main wash below Nelson (1950s map: strong). New #5 = Nelson landing strip (weak).
+      Best bets now #2, #3, #6. Old-map crops now named by location; `out/oldmap_review.csv` keyed by lat/lon.
+- [x] REPORT.md: placer-history factor, Old records and 1942 shutdown, ground exclusions, ant-mound stop (computed from files).
+- [ ] Verifier pass on REPORT.md (running).

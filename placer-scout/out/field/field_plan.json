@@ -1,247 +1,235 @@
 [
  {
   "kind":"target",
-  "key":"T1",
-  "rank":1,
-  "name":"Target #1",
+  "key":"T5",
+  "rank":5,
+  "name":"Target #5",
   "district":"Eldorado Canyon\/Nelson",
-  "lat":35.70662,
-  "lon":-114.822176,
-  "score":0.287,
-  "trap":"junction",
+  "lat":35.71088,
+  "lon":-114.827639,
+  "score":0.117,
+  "trap":"widening",
   "land":"BLM (likely open - verify)",
   "boundary":"",
   "near_excl":"PrivateOrUnknown",
-  "near_excl_m":121.0,
+  "near_excl_m":141.0,
   "src":"Eldorado Empire Mining Co.",
-  "src_m":1972.364,
+  "src_m":1208.9683,
   "window":"east",
-  "launch_lat":35.706326,
-  "launch_lon":-114.822549,
-  "launch_road":"Hwy 165",
+  "launch_lat":35.710817,
+  "launch_lon":-114.827676,
+  "launch_road":"unnamed road",
   "launch_road_type":"local road",
   "launch_ok":true,
-  "walk_m":47,
-  "climb_m":1,
+  "walk_m":8,
+  "climb_m":0,
   "steepest_pct":0,
   "walk_rating":"easy",
-  "elev_launch_m":892,
-  "elev_target_m":891,
+  "elev_launch_m":929,
+  "elev_target_m":929,
   "flight_line":[
    [
-    -114.823843,
-    35.707731
+    -114.829213,
+    35.712083
    ],
    [
-    -114.823657,
-    35.707546
+    -114.829028,
+    35.711898
    ],
    [
-    -114.823472,
-    35.707361
+    -114.828843,
+    35.711713
    ],
    [
-    -114.823287,
-    35.707176
+    -114.828657,
+    35.711528
    ],
    [
-    -114.823102,
-    35.707083
+    -114.828472,
+    35.711343
    ],
    [
-    -114.822917,
-    35.707083
+    -114.828287,
+    35.711157
    ],
    [
-    -114.822731,
-    35.707083
+    -114.828102,
+    35.710972
    ],
    [
-    -114.822546,
-    35.706991
+    -114.827917,
+    35.71088
    ],
    [
-    -114.822361,
-    35.706806
+    -114.827731,
+    35.71088
    ],
    [
-    -114.822176,
-    35.70662
+    -114.827546,
+    35.71088
    ],
    [
-    -114.821991,
-    35.706435
+    -114.827361,
+    35.71088
    ],
    [
-    -114.821806,
-    35.70625
+    -114.827176,
+    35.71088
    ],
    [
-    -114.82162,
-    35.706065
+    -114.826991,
+    35.710787
    ],
    [
-    -114.82162,
-    35.70588
+    -114.826806,
+    35.710694
    ],
    [
-    -114.821528,
-    35.705694
+    -114.82662,
+    35.710602
    ],
    [
-    -114.821435,
-    35.705509
+    -114.826435,
+    35.710509
    ],
    [
-    -114.821343,
-    35.705417
+    -114.82625,
+    35.710417
+   ],
+   [
+    -114.82625,
+    35.710417
    ]
   ],
   "video_start":[
-   35.707731,
-   -114.823843
+   35.712083,
+   -114.829213
   ],
   "video_end":[
-   35.705417,
-   -114.821343
+   35.710417,
+   -114.82625
   ],
-  "shafts_adits_300m":0,
-  "nearest_shaft_m":612,
-  "nps_m":4064,
-  "wilderness_m":2676,
-  "monument_m":5784,
-  "active_claim_m":673,
-  "private_m":121,
+  "shafts_adits_300m":2,
+  "nearest_shaft_m":280,
+  "nps_m":4562,
+  "wilderness_m":2467,
+  "monument_m":6234,
+  "active_claim_m":555,
+  "private_m":141,
   "on_blm":true,
   "trip":"A \u00b7 Nelson \/ Eldorado",
   "stop_no":1.0
  },
  {
   "kind":"target",
-  "key":"T3",
-  "rank":3,
-  "name":"Target #3",
-  "district":"Searchlight",
-  "lat":35.437824,
-  "lon":-114.920787,
-  "score":0.151,
-  "trap":"widening",
+  "key":"T2",
+  "rank":2,
+  "name":"Target #2",
+  "district":"Eldorado Canyon\/Nelson",
+  "lat":35.700972,
+  "lon":-114.829491,
+  "score":0.133,
+  "trap":"junction",
   "land":"BLM (likely open - verify)",
-  "boundary":"",
-  "near_excl":"BLM monument\/NCA",
-  "near_excl_m":137.0,
-  "src":"Quartette Mine",
-  "src_m":1825.5542,
+  "boundary":"YES: within 100 m, check on the ground",
+  "near_excl":"active claim",
+  "near_excl_m":5.0,
+  "src":"Copper Canyon Mine",
+  "src_m":1187.2922,
   "window":"east",
-  "launch_lat":35.440146,
-  "launch_lon":-114.920861,
-  "launch_road":"unnamed road",
+  "launch_lat":35.706679,
+  "launch_lon":-114.829653,
+  "launch_road":"El Dorado Rd",
   "launch_road_type":"local road",
   "launch_ok":true,
-  "walk_m":258,
-  "climb_m":0,
-  "steepest_pct":3,
-  "walk_rating":"easy",
-  "elev_launch_m":1003,
-  "elev_target_m":998,
+  "walk_m":633,
+  "climb_m":82,
+  "steepest_pct":47,
+  "walk_rating":"hard",
+  "elev_launch_m":940,
+  "elev_target_m":931,
   "flight_line":[
    [
-    -114.921343,
-    35.439491
+    -114.831343,
+    35.701713
    ],
    [
-    -114.92125,
-    35.439306
+    -114.831065,
+    35.701528
    ],
    [
-    -114.92125,
-    35.43912
+    -114.830787,
+    35.701435
    ],
    [
-    -114.921157,
-    35.438935
+    -114.830509,
+    35.701435
    ],
    [
-    -114.921157,
-    35.43875
+    -114.830231,
+    35.701343
    ],
    [
-    -114.921065,
-    35.438565
+    -114.829954,
+    35.70125
    ],
    [
-    -114.920972,
-    35.43838
+    -114.829676,
+    35.701065
    ],
    [
-    -114.920972,
-    35.438194
+    -114.829398,
+    35.700972
    ],
    [
-    -114.920787,
-    35.438009
+    -114.82912,
+    35.70088
    ],
    [
-    -114.920787,
-    35.437824
+    -114.828843,
+    35.700787
    ],
    [
-    -114.920694,
-    35.437639
+    -114.828565,
+    35.700787
    ],
    [
-    -114.920694,
-    35.437454
+    -114.828287,
+    35.700787
    ],
    [
-    -114.920694,
-    35.437269
+    -114.828009,
+    35.700787
    ],
    [
-    -114.920694,
-    35.437083
-   ],
-   [
-    -114.920694,
-    35.436898
-   ],
-   [
-    -114.920694,
-    35.436713
-   ],
-   [
-    -114.920787,
-    35.436528
-   ],
-   [
-    -114.920787,
-    35.436528
+    -114.827917,
+    35.700787
    ]
   ],
   "video_start":[
-   35.439491,
-   -114.921343
+   35.701713,
+   -114.831343
   ],
   "video_end":[
-   35.436528,
-   -114.920787
+   35.700787,
+   -114.827917
   ],
   "shafts_adits_300m":0,
-  "nearest_shaft_m":837,
-  "nps_m":11479,
-  "wilderness_m":14562,
-  "monument_m":137,
-  "active_claim_m":1676,
-  "private_m":812,
+  "nearest_shaft_m":315,
+  "nps_m":4738,
+  "wilderness_m":3508,
+  "monument_m":5128,
+  "active_claim_m":5,
+  "private_m":566,
   "on_blm":true,
-  "trip":"B \u00b7 Searchlight",
-  "stop_no":1.0
+  "trip":"A \u00b7 Nelson \/ Eldorado",
+  "stop_no":2.0
  },
  {
   "kind":"target",
-  "key":"T4",
-  "rank":4,
-  "name":"Target #4",
+  "key":"T3",
+  "rank":3,
+  "name":"Target #3",
   "district":"Searchlight",
   "lat":35.455787,
   "lon":-114.890417,
@@ -356,7 +344,7 @@
   "private_m":986,
   "on_blm":true,
   "trip":"B \u00b7 Searchlight",
-  "stop_no":2.0
+  "stop_no":1.0
  },
  {
   "kind":"target",
@@ -695,9 +683,9 @@
  },
  {
   "kind":"target",
-  "key":"T2",
-  "rank":2,
-  "name":"Target #2",
+  "key":"T1",
+  "rank":1,
+  "name":"Target #1",
   "district":"Goodsprings",
   "lat":35.807639,
   "lon":-115.57338,
@@ -812,9 +800,9 @@
  },
  {
   "kind":"target",
-  "key":"T5",
-  "rank":5,
-  "name":"Target #5",
+  "key":"T4",
+  "rank":4,
+  "name":"Target #4",
   "district":"other",
   "lat":36.044398,
   "lon":-115.299954,
