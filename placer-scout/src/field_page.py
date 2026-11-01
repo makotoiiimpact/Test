@@ -3,6 +3,15 @@ from out/field/field_plan.json (src/field_plan.py). Static page: no runtime capa
 import os, json, html, urllib.parse
 ROOT = os.path.join(os.path.dirname(__file__), ".."); OUT = os.path.join(ROOT, "out", "field")
 R = json.load(open(os.path.join(OUT, "field_plan.json")))
+import base64, io
+from PIL import Image
+_rev_p = os.path.join(ROOT, "out", "oldmap_review.csv")
+REV = {}
+if os.path.exists(_rev_p):
+    import pandas as _pd
+    for _r in _pd.read_csv(_rev_p).itertuples():
+        _im = Image.open(os.path.join(ROOT, _r.crop)).convert("RGB"); _im.thumbnail((520, 520)); _b = io.BytesIO(); _im.save(_b, "JPEG", quality=80)
+        REV[int(_r.rank)] = dict(verdict=_r.map_verdict, note=_r.map_note, sheet=_r.sheet, img=base64.b64encode(_b.getvalue()).decode())
 E = html.escape
 ft = lambda m: f"{m * 3.281:,.0f} ft"
 nav = lambda la, lo: "https://www.google.com/maps/dir/?api=1&" + urllib.parse.urlencode({"destination": f"{la},{lo}", "travelmode": "driving"})
@@ -57,6 +66,11 @@ def card(r):
 <li>coarse gravel on the inside of the bend just below the junction;</li>
 <li>a debris line from the last flood.</li></ul>
 <p>Take <b>3 test pans</b>: just below the junction, at the head of the gravel bar, and from a bedrock crack if you find one. Count the gold colors in each pan and note the black sand.</p></div>"""
+    rv = REV.get(r.get("rank"))
+    if rv:
+        body += (f'<div class="block"><h4>1950s USGS map check: <span class="verdict {rv["verdict"]}">{E(rv["verdict"])}</span></h4>'
+                 f'<p>{E(rv["note"])}</p><figure class="oldmap"><img src="data:image/jpeg;base64,{rv["img"]}" alt="1950s USGS map around {E(r["name"])}, target circled in red">'
+                 f'<figcaption>{E(rv["sheet"])}, about 3 km across. Red circle = target.</figcaption></figure></div>')
     walk = ("right at the road" if r["walk_m"] < 60 else f"{r['walk_m']:,} m ({ft(r['walk_m'])}) walk, {r['climb_m']} m climb")
     score = f'<span class="score">score {r["score"]:.2f}</span>' if r["kind"] == "target" else ""
     return f"""<article class="stop" id="{code}">
@@ -120,12 +134,17 @@ a{color:var(--accent)}
 .small{font-size:.88rem;color:var(--muted)}
 .sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:8px 18px;margin-top:6px}
 .sheet div{border-left:3px solid var(--accent);padding-left:8px}
+.verdict{font:700 .78rem var(--display);letter-spacing:.06em;text-transform:uppercase;padding:0 6px;border-radius:4px;border:1px solid}
+.verdict.strong{color:var(--ok)}.verdict.fair{color:var(--warn)}.verdict.weak{color:var(--danger)}
+.oldmap{margin:.5rem 0 0;max-width:520px}.oldmap img{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line)}
+.oldmap figcaption{font-size:.82rem;color:var(--muted);margin-top:4px}
 </style>
 <div class="wrap">
 <header><h1>Placer Scout field plan</h1>
 <p class="lede">Driving, drone and walking plan for the top __NT__ wash targets: the strong tier, each below a recorded gold mine, mill or mine dump. Each stop has a launch point on a public road, a drone shot list with exact start and stop points, what to check on foot, and warnings for private land, claims and old shafts.</p></header>
 
 <section class="box"><h2>Where to start</h2>
+<p><b>Best bets after the old-map check: #5 (Searchlight) and #6 (Goodsprings).</b> Both sit in real washes just below named gold mines. The 1950s maps show #1, #3, #4 and #7 are a townsite, quarries, a pipeline corridor and an open slope, so look at those from the road or skip them.</p>
 <ol>__START__</ol>
 <p class="small">The ant-mound check is off the list: in the clip review none of the 50 spots looked like a real clearing, so the photo scan stopped there. Bring the files from the chat: <b>field_plan.kml</b> (launch points, targets and wash flight lines for Google Earth or a GPS app) and <b>targets.gpx</b>.</p></section>
 

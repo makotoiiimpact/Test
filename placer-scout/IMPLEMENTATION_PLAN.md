@@ -165,3 +165,13 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
 - [x] Radar check (2026-10-31): MRMS Aug–Oct totals vs official RFCD daily files, 2023–25, at 25 study-area gauges: radar/gauge median
       1.49 (radar high). Year-to-year comparisons (radar vs radar) stand; absolute mm read high. The live gauge API
       (gaugeservices/geojson) returns 0 for past windows (tested on 2025 storms), so it cannot check 2026; Oct 30–31 storm unconfirmed.
+
+## Old maps (2026-11-01)
+- [x] `out/old_maps.csv`: 271 USGS historical topo sheets (1886–1997) covering the area, with download links.
+- [x] District reports checked (Callaghan 1939 Searchlight; Hewett 1931 Goodsprings): lode-geology reports, no placer
+      mentions; their mill mentions match mines already in the gold sources.
+- [!] Whole-sheet OCR (Tesseract 5.3, `src/oldmaps.py`) reads too little map lettering to be useful (0 "mine" labels on the
+      Searchlight 1959 sheet). Kept for reference; not used for scoring.
+- [x] Top 8 read by eye on the 1950s 15' sheets (`src/oldmap_crops.py`, `out/oldmap_review.csv`): strong #5, #6; fair #2, #8;
+      weak #1 (Nelson townsite on highway), #3 (quarries, power line), #4 (pipeline corridor), #7 (open slope). Map-named
+      mines (Pittsburg, Iron Gold, Lavina, Boss, …) were already in the gold sources. Field plan updated with each map crop.
