@@ -177,6 +177,9 @@ Gate: Phase 1 passed its verifier (yes, 2026-10-31).
       mines (Pittsburg, Iron Gold, Lavina, Boss, …) were already in the gold sources. Field plan updated with each map crop.
 - [x] USGS Bulletin 1356 (Johnson 1973, placer gold of Nevada) read for Clark County (`out/notes/usgs_b1356_placers.md`):
       the Gresh placer claims are in T26S R64E Sec 04 = target #23's section (and next to #1). Goodsprings has no recorded
-      placer production (11 of top 25 are there). Searchlight placers lie east, in ground now excluded. Not yet used in scoring.
+      placer production (11 of top 25 are there). Searchlight placers lie east, in ground now excluded.
+- [x] Used in scoring (2026-11-01, `src/history.py`): f_hist = 1.0 Gresh section, 0.9 Eldorado, 0.75 Searchlight, 0.6 other.
+      Re-rank kept the same top 8 (old #3/#4/#5 became #5/#3/#4); Black Hawk (Gresh section) 23 -> 21, weak junction trap.
+      Lidar rejected 13 spots in 3 rounds. Old-map verdicts re-keyed by location; field plan best bets now #4 and #6.
 - [ ] Blocked or login-only: NBMG Bulletin 30 (Vanderburg 1936, Placer mining in Nevada) and Bulletin 62 (Clark County),
       HathiTrust, UNLV Special Collections, USGS EarthExplorer 1950s aerial photos (free account). Owner can upload PDFs.

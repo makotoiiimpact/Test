@@ -144,7 +144,7 @@ a{color:var(--accent)}
 <p class="lede">Driving, drone and walking plan for the top __NT__ wash targets: the strong tier, each below a recorded gold mine, mill or mine dump. Each stop has a launch point on a public road, a drone shot list with exact start and stop points, what to check on foot, and warnings for private land, claims and old shafts.</p></header>
 
 <section class="box"><h2>Where to start</h2>
-<p><b>Best bets after the old-map check: #5 (Searchlight) and #6 (Goodsprings).</b> Both sit in real washes just below named gold mines. The 1950s maps show #1, #3, #4 and #7 are a townsite, quarries, a pipeline corridor and an open slope, so look at those from the road or skip them.</p>
+<p>__BEST__</p>
 <ol>__START__</ol>
 <p class="small">The ant-mound check is off the list: in the clip review none of the 50 spots looked like a real clearing, so the photo scan stopped there. Bring the files from the chat: <b>field_plan.kml</b> (launch points, targets and wash flight lines for Google Earth or a GPS app) and <b>targets.gpx</b>.</p></section>
 
@@ -188,5 +188,16 @@ start = "".join(f"<li><b>Trip {E(tr)}</b> ({sum(1 for r in R if r['trip'] == tr)
                 f"best is #{min(r['rank'] for r in R if r['trip'] == tr)}): {E(START_WHY.get(tr[0], ''))}</li>" for tr in order_trips)
 hc = [r["name"] for r in R if r["trip"].startswith("C") and (r["walk_m"] >= 1500 or r["climb_m"] >= 150)]
 hard_c = ("Skip " + " and ".join(hc) + " unless you're set up for a real hike.") if hc else "No long hikes on this trip."
-open(os.path.join(OUT, "field_plan.html"), "w").write(page.replace("__TRIPS__", "".join(trips)).replace("__NB__", {7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}.get(nb, str(nb))).replace("__HARD_C__", hard_c).replace("__START__", start).replace("__NT__", str(len(R))))
+
+_top = {int(r.get("rank")): r for r in R}
+_strong = [k for k in sorted(REV) if REV[k]["verdict"] == "strong" and k in _top]
+_weak = [k for k in sorted(REV) if REV[k]["verdict"] == "weak" and k in _top]
+_rs = {int(x.rank): str(x.short_reason) for x in _pd.read_csv(_rev_p).itertuples()} if os.path.exists(_rev_p) else {}
+def _join(xs): return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
+best = ""
+if _strong:
+    best += "<b>Best bets after the old-map check: " + _join([f"#{k} ({E(_top[k].get('district'))})" for k in _strong]) + ".</b> Each sits in a real wash just below a named gold mine. "
+if _weak:
+    best += "The 1950s maps show " + _join([f"#{k}" for k in _weak]) + " sit on " + _join([_rs.get(k) or "poor ground" for k in _weak]) + ", so look at those from the road or skip them."
+open(os.path.join(OUT, "field_plan.html"), "w").write(page.replace("__TRIPS__", "".join(trips)).replace("__NB__", {7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}.get(nb, str(nb))).replace("__HARD_C__", hard_c).replace("__START__", start).replace("__NT__", str(len(R))).replace("__BEST__", best))
 print("field_plan.html KB", os.path.getsize(os.path.join(OUT, "field_plan.html")) // 1024)
