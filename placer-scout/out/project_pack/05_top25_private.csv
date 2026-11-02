@@ -1,0 +1,26 @@
+rank,district,lat,lon,score,f_source,f_flood,f_trap_lidar,f_hist,top_source_name,plss,nearest_exclusion,nearest_exclusion_m,boundary_risk
+1,Goodsprings,35.807639,-115.57338,0.191,0.425,0.748,1.0,0.6,Boss Mine,Mount Diablo Meridian T25S R57E Sec 03 L 2,active claim,192.0,
+2,Eldorado Canyon/Nelson,35.700972,-114.829491,0.133,0.506,0.425,0.687,0.9,Copper Canyon Mine,Mount Diablo Meridian T26S R64E Sec 10 SWNW,active claim,5.0,"YES: within 100 m, check on the ground"
+3,Searchlight,35.455787,-114.890417,0.124,0.405,0.411,0.991,0.75,Geneva Mill,Mount Diablo Meridian T29S R63E Sec 01 L 1,active claim,211.0,
+4,other,36.044398,-115.299954,0.122,0.479,0.425,1.0,0.6,Mine Dump | topo Blue Diamond SE 1972,Mount Diablo Meridian T22S R60E Sec 07 SESE,PrivateOrUnknown,333.0,
+5,Eldorado Canyon/Nelson,35.71088,-114.827639,0.117,0.415,0.418,0.748,0.9,Eldorado Empire Mining Co.,Mount Diablo Meridian T26S R64E Sec 03 NWSW,PrivateOrUnknown,141.0,
+6,Goodsprings,35.839954,-115.467639,0.099,0.59,0.279,1.0,0.6,Lavina Mine,Mount Diablo Meridian T24S R58E Sec 22 L 13,active claim,37.0,"YES: within 100 m, check on the ground"
+7,Goodsprings,35.817269,-115.446806,0.096,0.481,0.357,0.928,0.6,Lookout Mine,Mount Diablo Meridian T24S R58E Sec 35 SWNW,active claim,237.0,
+8,Goodsprings,35.858657,-115.47588,0.09,0.527,0.336,0.846,0.6,Prairie Flower Mine,Mount Diablo Meridian T24S R58E Sec 16 L 6,active claim,222.0,
+9,Searchlight,35.482083,-114.922639,0.089,0.497,0.24,1.0,0.75,Southern Nevada Mine,Mount Diablo Meridian T28S R63E Sec 27 L 8,PrivateOrUnknown,33.0,"YES: within 100 m, check on the ground"
+10,Searchlight,35.437176,-114.919861,0.089,0.244,0.486,1.0,0.75,Rambler Mine,Mount Diablo Meridian T29S R63E Sec 11 SWNW,BLM monument/NCA,222.0,
+11,Eldorado Canyon/Nelson,35.74375,-114.779491,0.084,0.275,0.338,1.0,0.9,Montezuma Claims,Mount Diablo Meridian T25S R64E Sec 25 L 6,active claim,171.0,
+12,Goodsprings,35.730046,-115.472454,0.082,0.36,0.381,1.0,0.6,Silver Gem Mine,Mount Diablo Meridian T25S R58E Sec 33 L 8,active claim,172.0,
+13,Eldorado Canyon/Nelson,35.752083,-114.83125,0.08,0.1,0.89,1.0,0.9,Sinjun Claims,Mount Diablo Meridian T25S R64E Sec 21 SESE,BLM wilderness,374.0,
+14,Goodsprings,35.80838,-115.45088,0.078,0.636,0.204,1.0,0.6,Lookout Mine,Mount Diablo Meridian T25S R58E Sec 03 L 1,PrivateOrUnknown,721.0,
+15,Searchlight,35.473102,-114.846806,0.078,0.596,0.262,0.662,0.75,Shoshone Cons. Lode Mining Claim,Mount Diablo Meridian T28S R64E Sec 28 SWSW,active claim,720.0,
+16,Searchlight,35.443657,-114.93162,0.075,0.76,0.501,0.264,0.75,Cyrus Noble,Mount Diablo Meridian T29S R63E Sec 03 SESW,BLM monument/NCA,67.0,"YES: within 100 m, check on the ground"
+17,Eldorado Canyon/Nelson,35.706343,-114.787917,0.072,0.754,0.302,0.353,0.9,Eldorado District,Mount Diablo Meridian T26S R64E Sec 01 SESW,PrivateOrUnknown,13.0,"YES: within 100 m, check on the ground"
+18,Goodsprings,35.871065,-115.467361,0.071,0.345,0.342,1.0,0.6,Bluejay Mine,Mount Diablo Meridian T24S R58E Sec 10 L 7,active claim,1037.0,
+19,Goodsprings,35.760324,-115.432454,0.067,0.594,0.188,1.0,0.6,Bullion Mine,Mount Diablo Meridian T25S R58E Sec 24 L 5,PrivateOrUnknown,382.0,
+20,Goodsprings,35.793935,-115.423657,0.067,0.352,0.315,1.0,0.6,Over Prospect,Mount Diablo Meridian T25S R58E Sec 12 L 2,PrivateOrUnknown,1443.0,
+21,Goodsprings,35.712824,-115.434213,0.065,0.264,0.676,0.606,0.6,New Year Mine,Mount Diablo Meridian T26S R58E Sec 02,active claim,126.0,
+22,Searchlight,35.472731,-114.932824,0.06,0.299,0.278,0.965,0.75,Tailings - Undifferentiated | topo Searchlight 1989,Mount Diablo Meridian T28S R63E Sec 27 L 12,PrivateOrUnknown,50.0,"YES: within 100 m, check on the ground"
+23,Searchlight,35.470972,-114.869769,0.056,0.354,0.279,0.755,0.75,Oakland Group,Mount Diablo Meridian T28S R64E Sec 31 NENE,active claim,414.0,
+24,Eldorado Canyon/Nelson,35.715509,-114.78588,0.042,0.334,0.28,0.5,0.9,Tailings - Undifferentiated | topo Nelson 1984,Mount Diablo Meridian T26S R64E Sec 01 SWNE,NPS,786.0,
+25,Eldorado Canyon/Nelson,35.699676,-114.858287,0.042,0.307,0.603,0.253,0.9,Nugget of Gold Mine,Mount Diablo Meridian T26S R64E Sec 08,active claim,76.0,"YES: within 100 m, check on the ground"
